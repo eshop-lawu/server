@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportAreaRechargeDailyDOMapperExtend">
+    <resultMap id="BaseResultMap"
+               type="com.lawu.eshop.statistics.srv.domain.extend.AgentAreaRechargeDailyMonthDOExtend">
+        <result column="merchant_recharge_balance" property="merchantRechargeBalance" jdbcType="DECIMAL"/>
+        <result column="merchant_recharge_point" property="merchantRechargePoint" jdbcType="DECIMAL"/>
+        <result column="member_recharge_balance" property="memberRechargeBalance" jdbcType="DECIMAL"/>
+        <result column="member_recharge_point" property="memberRechargePoint" jdbcType="DECIMAL"/>
+        <result column="city_id" property="cityId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getAreaRechargeList" resultMap="BaseResultMap"
+            parameterType="com.lawu.eshop.statistics.srv.domain.extend.AgentAreaRechargeExampleExtend">
+        SELECT
+            province_id,
+            city_id,
+            case when sum(merchant_recharge_balance) is null then 0 else sum(merchant_recharge_balance) end merchant_recharge_balance,
+            case when sum(merchant_recharge_point) is null then 0 else sum(merchant_recharge_point) end merchant_recharge_point,
+            case when sum(member_recharge_balance) is null then 0 else sum(member_recharge_balance) end member_recharge_balance,
+            case when sum(member_recharge_point) is null then 0 else sum(member_recharge_point) end member_recharge_point
+        FROM
+            report_area_recharge_daily
+        WHERE
+            city_id = ${cityId}
+        AND gmt_report BETWEEN #{beginTime} AND #{endTime}
+        GROUP BY province_id,city_id
+  </select>
+</mapper>

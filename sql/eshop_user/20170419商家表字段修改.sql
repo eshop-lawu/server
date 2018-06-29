@@ -1,0 +1,1 @@
+alter table merchant modify column `ry_token` varchar(200) DEFAULT NULL COMMENT '融云token';

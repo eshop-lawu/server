@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.HelpRedpacketAttendDetailDOMapperExtend">
+    <update id="addHelpCount" parameterType="com.lawu.eshop.activity.srv.domain.extend.HelpRedpacketAttendDetailDOExtend" >
+        update help_redpacket_attend_detail set
+        help_count = help_count + 1,
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <!-- 通过下标获取某一行的id -->
+    <select id="getIdWithIndex" resultType="java.lang.Integer">
+        SELECT id FROM help_redpacket_attend_detail WHERE activity_id=#{activityId,jdbcType=INTEGER} AND abnormal_status IN (0, 3)
+        <if test="isLucky != null">
+            AND is_lucky = #{isLucky,jdbcType=BIT}
+        </if> 
+        LIMIT #{index,jdbcType=INTEGER}, 1
+    </select>
+    
+    <!-- 获取预期的红包的总额 -->
+    <select id="getExpectedRedpacketAmount" resultType="java.math.BigDecimal" parameterType="com.lawu.eshop.activity.srv.domain.extend.RedpacketAmountParam" >
+        SELECT SUM(amount) FROM (
+            SELECT COUNT(*) * (1 + help_count * #{multiple, jdbcType=DECIMAL}) * #{redpacketAmount, jdbcType=DECIMAL} AS amount FROM help_redpacket_attend_detail 
+            WHERE is_lucky = 0 AND activity_id=#{activityId,jdbcType=INTEGER} AND abnormal_status IN (0, 3)
+            <if test="ids != null and ids.size > 0">
+                AND id NOT IN <foreach collection="ids" item="id" open="(" close=")" separator="," >#{id, jdbcType=INTEGER}</foreach>
+            </if>
+            GROUP BY help_count
+        ) AS temp
+    </select>
+    
+    <!-- 分配最低红包金额 -->
+    <update id="updateMinRedpacketAmount" parameterType="com.lawu.eshop.activity.srv.domain.extend.UpdateMinRedpacketAmountParam" >
+        UPDATE help_redpacket_attend_detail SET original_money = #{minRedpacketAmount, jdbcType=DECIMAL}, final_money = (1 + help_count * #{multiple, jdbcType=DECIMAL}) * #{minRedpacketAmount, jdbcType=DECIMAL} * 100, 
+        status = 2, allot_time=NOW(), gmt_modified=NOW()
+        WHERE is_lucky = 0 AND activity_id=#{activityId,jdbcType=INTEGER}
+        AND abnormal_status IN <foreach collection="abnormalStatus" item="listItem" open="(" close=")" separator="," >#{listItem, jdbcType=TINYINT}</foreach>
+    </update>
+    
+    <!-- 获取已经分配的红包总金额 -->
+    <select id="getRedpacketTotalAmount" resultType="java.math.BigDecimal" parameterType="com.lawu.eshop.activity.srv.domain.extend.GetRedpacketAmountParam" >
+        SELECT SUM(final_money) / 100 FROM help_redpacket_attend_detail WHERE is_lucky = 0 
+        AND activity_id=#{activityId,jdbcType=INTEGER}
+        AND abnormal_status IN <foreach collection="abnormalStatus" item="listItem" open="(" close=")" separator="," >#{listItem, jdbcType=TINYINT}</foreach>
+    </select>
+    
+    <select id="getTotalMoney" resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+        SELECT SUM(final_money) / 100 FROM help_redpacket_attend_detail WHERE status > 2 AND activity_id=#{activityId,jdbcType=INTEGER} AND abnormal_status IN (0, 3)
+    </select>
+
+    <select id="queryAbnormalInviteRecordDate" resultType="com.lawu.eshop.activity.srv.domain.extend.HelpRedpacketInviteAbnormalDOView" parameterType="com.lawu.eshop.activity.param.AbnormalInviteParam">
+        select
+        min(gmt_create) as minInviteTime,
+        max(gmt_create) as maxInviteTime
+        from help_redpacket_invite_record
+        where activity_id =#{activeId}
+        and attend_id = #{attendId}
+        and attend_user_num = #{userNum}
+    </select>
+</mapper>

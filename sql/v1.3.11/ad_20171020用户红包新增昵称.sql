@@ -1,0 +1,1 @@
+alter table user_red_packet add column  `nickname` varchar(50) DEFAULT NULL COMMENT '昵称' after user_account;

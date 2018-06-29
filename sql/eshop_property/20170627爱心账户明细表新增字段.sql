@@ -1,0 +1,1 @@
+alter table love_detail add column `biz_id` varchar(500) DEFAULT '0' COMMENT '业务类型操作对应的业务表ID';

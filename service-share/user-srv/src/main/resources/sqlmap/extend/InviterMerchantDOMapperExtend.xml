@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.InviterMerchantDOMapperExtend" >
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.user.srv.domain.extend.InviterMerchantDOView" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="inviter_id" property="inviterId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="principal_name" property="principalName" jdbcType="VARCHAR" />
+    <result column="principal_mobile" property="principalMobile" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select resultMap="BaseResultMap" parameterType="com.lawu.eshop.user.srv.domain.extend.InviterMerchantDOView" id="selectInviterMerchantByRowbounds" >
+    select
+    	me.id as id, 
+    	me.account as account,
+    	me.mobile as mobile,
+    	ms.name as name,
+    	ms.region_path as region_path,
+    	ms.principal_name as principal_name,
+    	ms.principal_mobile as principal_mobile,
+    	ms.region_name as region_name,
+    	ms.status as status,
+    	ms.address as address,
+    	me.gmt_create as gmtCreate
+   			 from merchant me 
+      left join merchant_store ms on me.id=ms.merchant_id 
+    <where>
+    	me.inviter_id=#{inviterId,jdbcType=VARCHAR}
+    	 and me.inviter_type=#{inviterType,jdbcType=TINYINT}
+	    <if test="name != null and name!=''" >
+	      and (ms.name like #{name}
+	      	or me.account like #{name})
+	    </if>
+    </where>
+  </select>
+  
+  <select resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.srv.domain.extend.InviterMerchantDOView" id="selectInviterMerchantCount" >
+     select
+    	count(*)
+   			 from merchant me 
+      left join merchant_store ms on me.id=ms.merchant_id 
+    <where>
+    	me.inviter_id=#{inviterId,jdbcType=VARCHAR}
+    	 and me.inviter_type=#{inviterType,jdbcType=TINYINT}
+	    <if test="name != null and name!=''" >
+	      and (ms.name like #{name}
+	      	or me.account like #{name})
+	    </if>
+    </where>
+  </select>
+  
+  
+</mapper>

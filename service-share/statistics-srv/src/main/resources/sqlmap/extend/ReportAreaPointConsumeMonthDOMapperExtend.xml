@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportAreaPointConsumeMonthDOMapperExtend" >
+  <select id="selectReportAreaPointConsumeDailyInMonth" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportAreaPointConsumeDailyInMonthDOView"
+  		parameterType="java.lang.String">
+        select
+        sum(member_recharge_point) memberRechargePoint,sum(merchant_recharge_point) merchantRechargePoint,sum(member_point) memberPoint,sum(merchant_point) merchantPoint,area_id as areaId,city_id as cityId,province_id as provinceId
+		from report_area_point_consume_daily
+			where (gmt_report &gt;= #{bdate} and gmt_report &lt;= #{edate})
+		group by area_id,city_id,province_id
+   </select>
+
+    <select id="executeCollectReportAreaPointConsumeMonth" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportAreaPointConsumeDailyInMonthDOView"
+            parameterType="java.util.Map">
+        select
+        sum(member_recharge_point) memberRechargePoint,sum(merchant_recharge_point) merchantRechargePoint,sum(member_point) memberPoint,sum(merchant_point) merchantPoint,area_id as areaId,city_id as cityId,province_id as provinceId
+        from report_area_point_consume_daily
+        where (gmt_report &gt;= #{bdate} and gmt_report &lt;= #{edate})
+        group by area_id,city_id,province_id
+        limit #{offset},#{pageSize}
+    </select>
+</mapper>	

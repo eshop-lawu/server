@@ -1,0 +1,1 @@
+ALTER TABLE `shopping_order` ADD COLUMN `is_fans` tinyint(1) unsigned NOT NULL COMMENT '购买前用户是否是商家的粉丝' AFTER `send_time`;

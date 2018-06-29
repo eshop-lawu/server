@@ -1,0 +1,1 @@
+alter table product MODIFY column `max_price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '型号现价最低价对应的原价';

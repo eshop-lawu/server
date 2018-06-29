@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.RichAccountDOExtendMapper">
+    
+    <!-- 更新用户的动力值快照 -->
+    <update id="updatePowerSnapshoot" parameterType="com.lawu.eshop.activity.srv.domain.extend.UpdatePowerSnapshootParam">
+       <![CDATA[
+       UPDATE rich_account SET power_snapshoot = power, gmt_modified = NOW() WHERE id IN (
+            SELECT tmp.id FROM (
+                SELECT id FROM rich_account 
+                WHERE power_snapshoot = 0
+                LIMIT 0, #{pageSize,jdbcType=INTEGER}
+            ) AS tmp
+        )
+        ]]>
+    </update>
+    
+    <!-- 获取所有满足条件的动力值总和 -->
+    <select id = "totalPower" parameterType="com.lawu.eshop.activity.srv.domain.extend.TotalPowerParam" resultType="java.lang.Long">
+        SELECT SUM(power_snapshoot) FROM rich_account
+        <where>
+            <if test="power != null">
+                and power_snapshoot <![CDATA[>]]> #{power,jdbcType=INTEGER}
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                and id in <foreach close=")" collection="ids" item="listItem" open="(" separator=",">#{listItem}</foreach>
+            </if>
+        </where>
+    </select>
+    
+    <!-- 领取钻石 -->
+    <update id="receiveDiamonds" parameterType="com.lawu.eshop.activity.srv.domain.extend.DiamondDistributionParam">
+        UPDATE rich_account
+        <set>
+            <if test="diamond != null">
+                diamond = diamond + #{diamond,jdbcType=DECIMAL},
+                diamond_total = diamond_total + #{diamond,jdbcType=DECIMAL},
+            </if>
+            <if test="diamondLucky != null">
+                diamond_lucky = diamond_lucky + #{diamondLucky,jdbcType=DECIMAL},
+                diamond_total = diamond_total + #{diamondLucky,jdbcType=DECIMAL},
+            </if>
+            last_take_time = NOW(),
+            gmt_modified = NOW()
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <!-- 根据下标获取幸运钻账户id -->
+    <select id="getLuckyDiamondIdByIndex" resultType="java.lang.Long" parameterType="com.lawu.eshop.activity.srv.domain.extend.GetLuckyDiamondIdByIndexParam">
+       <![CDATA[
+       SELECT id FROM rich_account 
+       WHERE power_snapshoot >= #{power,jdbcType=INTEGER}
+       AND last_take_time >= #{stopGrowingDate,jdbcType=TIMESTAMP}
+       LIMIT #{idx,jdbcType=BIGINT},1
+       ]]>
+    </select>
+
+    <update id="addMemberPower" parameterType="com.lawu.eshop.activity.srv.domain.extend.RichAccountAddPowerParam">
+     <![CDATA[
+           UPDATE rich_account SET power = power+${power}, gmt_modified = NOW() where user_num=#{memberNum};
+            ]]>
+    </update>
+</mapper>

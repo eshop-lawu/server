@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.mall.srv.mapper.extend.DiscountPackageExtendDOMapper">
+  <resultMap id="DiscountPackageExtendResultMap" type="com.lawu.eshop.mall.srv.domain.extend.DiscountPackageExtendDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="merchant_store_id" jdbcType="BIGINT" property="merchantStoreId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="cover_image" jdbcType="VARCHAR" property="coverImage" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="original_price" jdbcType="DECIMAL" property="originalPrice" />
+    <result column="other_instructions" jdbcType="VARCHAR" property="otherInstructions" />
+    <result column="validity_period_begin" jdbcType="TIMESTAMP" property="validityPeriodBegin" />
+    <result column="validity_period_end" jdbcType="TIMESTAMP" property="validityPeriodEnd" />
+    <result column="use_time_week" jdbcType="VARCHAR" property="useTimeWeek" />
+    <result column="use_time_begin" jdbcType="TIME" property="useTimeBegin" />
+    <result column="use_time_end" jdbcType="TIME" property="useTimeEnd" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="is_reservation" jdbcType="BIT" property="isReservation" />
+    <result column="advance_booking_time" jdbcType="VARCHAR" property="advanceBookingTime" />
+    <result column="purchase_notes" jdbcType="VARCHAR" property="purchaseNotes" />
+    <result column="use_rules" jdbcType="VARCHAR" property="useRules" />
+    <result column="gmt_up" jdbcType="TIMESTAMP" property="gmtUp" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    
+    <!-- one to many -->
+    <collection property="discountPackageContents" column="dpc_id" javaType="list" ofType="com.lawu.eshop.mall.srv.domain.DiscountPackageContentDO" resultMap="DiscountPackageContentResultMap"/>
+    <collection property="discountPackageImages" column="dpi_id" javaType="list" ofType="com.lawu.eshop.mall.srv.domain.DiscountPackageImageDO" resultMap="DiscountPackageImageResultMap"/>
+  </resultMap>
+  
+  <resultMap id="DiscountPackageContentResultMap" type="com.lawu.eshop.mall.srv.domain.DiscountPackageContentDO">
+    <id column="dpc_id" jdbcType="BIGINT" property="id" />
+    <result column="dpc_discount_package_id" jdbcType="BIGINT" property="discountPackageId" />
+    <result column="dpc_name" jdbcType="VARCHAR" property="name" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="unit" jdbcType="VARCHAR" property="unit" />
+    <result column="subtotal" jdbcType="DECIMAL" property="subtotal" />
+    <result column="dpc_status" jdbcType="TINYINT" property="status" />
+    <result column="dpc_gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="dpc_gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  
+  <resultMap id="DiscountPackageImageResultMap" type="com.lawu.eshop.mall.srv.domain.DiscountPackageImageDO">
+    <id column="dpi_id" jdbcType="BIGINT" property="id" />
+    <result column="dpi_discount_package_id" jdbcType="BIGINT" property="discountPackageId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="dpi_status" jdbcType="TINYINT" property="status" />
+    <result column="dpi_gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="dpi_gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="DiscountPackage_Column_List">
+    dp.id, dp.merchant_id, dp.merchant_store_id, dp.name, dp.cover_image, dp.price, dp.original_price, dp.other_instructions, 
+    dp.validity_period_begin, dp.validity_period_end, dp.use_time_week, dp.use_time_begin, dp.use_time_end, 
+    dp.status, dp.is_reservation, dp.advance_booking_time, dp.purchase_notes, dp.use_rules, dp.gmt_up as dp_gmt_up, dp.gmt_create, dp.gmt_modified
+  </sql>
+  
+  <sql id="DiscountPackageContent_Column_List">
+    dpc.id as dpc_id, dpc.discount_package_id as dpc_discount_package_id, dpc.name as dpc_name, dpc.unit_price, dpc.quantity, dpc.unit, dpc.subtotal, 
+    dpc.status as dpc_status, dpc.gmt_create as dpc_gmt_create, dpc.gmt_modified as dpc_gmt_modified
+  </sql>
+  
+  <sql id="DiscountPackageImage_Column_List">
+    dpi.id as dpi_id, dpi.discount_package_id as dpi_discount_package_id, dpi.description, dpi.image, dpi.status as dpi_status, dpi.gmt_create as dpi_gmt_create, dpi.gmt_modified as dpi_gmt_modified
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="DiscountPackageExtendResultMap">
+    select 
+    <include refid="DiscountPackage_Column_List" />,
+    <include refid="DiscountPackageContent_Column_List" />,
+    <include refid="DiscountPackageImage_Column_List" />
+    from discount_package dp
+    left join discount_package_content dpc on dp.id = dpc.discount_package_id
+    left join discount_package_image dpi on dp.id = dpi.discount_package_id 
+    where dp.id = #{id,jdbcType=BIGINT} and dpc.status = 1 and dpi.status = 1
+  </select>
+</mapper>

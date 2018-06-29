@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.DrawLotteryActivityPrizeDOMapperExtend">
+
+    <update id="updateDrawLotteryActivityPrizeInventory" parameterType="java.lang.Long" >
+        update draw_lottery_activity_prize set inventory = inventory - 1,gmt_modified = sysdate()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <select id="getRandPrizeAdImg" parameterType="java.lang.Long" resultType="java.lang.String">
+       SELECT ad_img_path FROM draw_lottery_activity_prize where draw_lottery_activity_id = #{id,jdbcType=BIGINT} and status = 1 ORDER BY rand() LIMIT 1;
+    </select>
+
+</mapper>

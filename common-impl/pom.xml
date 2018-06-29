@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>eshop</artifactId>
+        <groupId>com.lawu.eshop</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>common-impl</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>authorization-impl</module>
+        <module>monitor-agent</module>
+        <module>id-worker-client-impl</module>
+        <module>concurrent-queue-impl</module>
+        <module>synchronization-lock-impl</module>
+        <module>mq-impl</module>
+        <module>solr-util-impl</module>
+        <module>framework-web-impl</module>
+    </modules>
+</project>

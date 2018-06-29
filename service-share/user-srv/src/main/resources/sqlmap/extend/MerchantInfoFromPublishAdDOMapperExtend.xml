@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.MerchantInfoFromPublishAdDOMapperExtend" >
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.user.srv.domain.extend.MerchantInfoFromPublishAdDOView" >
+        <result column="name" property="storeName" jdbcType="VARCHAR" />
+        <result column="path" property="logoUrl" jdbcType="VARCHAR" />
+        <result column="website_url" property="websiteUrl" jdbcType="VARCHAR" />
+        <result column="taobao_url" property="taobaoUrl" jdbcType="VARCHAR" />
+        <result column="tmall_url" property="tmUrl" jdbcType="VARCHAR" />
+        <result column="jd_url" property="jdUrl" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getMerchantInfoFromPublishAd" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select 
+        ms.name,msi.path,mp.website_url,mp.taobao_url,mp.tmall_url,mp.jd_url 
+        from merchant_store ms 
+		left join merchant_store_image msi on ms.merchant_id=msi.merchant_id and msi.type=3 and msi.status=1
+		left join merchant_profile mp on ms.merchant_id = mp.id
+		where mp.id = #{merchantId}
+    </select>
+</mapper>

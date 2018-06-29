@@ -1,0 +1,1 @@
+alter table business_deposit add column `gmt_verify` datetime DEFAULT NULL COMMENT '核实时间' AFTER `gmt_pay`;

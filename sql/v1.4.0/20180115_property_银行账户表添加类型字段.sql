@@ -1,0 +1,1 @@
+alter table eshop_property.bank_account add column `account_type` tinyint(2) NOT NULL DEFAULT '1' COMMENT '账户类型(1-银行卡2-支付宝3微信)' after account_number;

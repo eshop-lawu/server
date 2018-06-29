@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.property.srv.mapper.extend.PropertyInfoDOMapperExtend" >
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOView" >
+    update property_info set 
+        balance = balance - #{balance,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updatePropertyInfoAddPoint" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        point = point + #{point,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updatePropertyInfoMinusPoint" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        point = point - #{point,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR} and point >= #{point,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="updatePropertyInfoAddBalance" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        balance = balance + #{balance,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updatePropertyInfoMinusBalance" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        balance = balance - #{balance,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR} and balance >= #{balance,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="updatePropertyInfoAddLove" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        love_account = love_account + #{loveAccount,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updatePropertyInfoMinusLove" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+    update property_info set 
+        love_account = love_account - #{loveAccount,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where user_num = #{userNum,jdbcType=VARCHAR}
+  </update>
+
+    <update id="updatePropertyInfoAddFreeze" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+        update property_info set
+        freeze_money = freeze_money + #{freezeMoney,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updatePropertyInfoMinusFreeze" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+        update property_info set
+        freeze_money = freeze_money - #{freezeMoney,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updatePropertyInfoAddBalanceMinusFreeze" parameterType="com.lawu.eshop.property.srv.domain.extend.PropertyInfoDOEiditView" >
+        update property_info set
+        balance = balance + #{balance,jdbcType=DECIMAL},
+        freeze_money = freeze_money - #{freezeMoney,jdbcType=DECIMAL},
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+  
+</mapper>

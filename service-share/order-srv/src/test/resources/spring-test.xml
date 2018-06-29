@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="com.lawu">
+		<context:exclude-filter type="annotation" expression="org.springframework.cloud.netflix.feign.FeignClient" />
+		<context:exclude-filter type="annotation" expression="org.springframework.boot.autoconfigure.SpringBootApplication" />
+        <context:exclude-filter type="assignable" expression="com.lawu.eshop.order.srv.OrderSrvApplication" />
+		<!-- 
+		<context:exclude-filter type="annotation" expression="com.lawu.eshop.compensating.transaction.annotation.CompensatingTransactionMain" />
+		<context:exclude-filter type="annotation" expression="com.lawu.eshop.compensating.transaction.annotation.CompensatingTransactionFollow" />
+		-->
+        <context:exclude-filter type="assignable" expression="com.lawu.eshop.order.srv.strategy.ExpressStrategy" />
+	</context:component-scan>
+    
+    <context:component-scan base-package="com.lawu.eshop.order.srv.mock"/>
+    
+    <!-- 配置作业-->
+    <bean id="shardingContexts" class="com.dangdang.ddframe.job.executor.ShardingContexts">
+        <constructor-arg name="taskId" value="testTaskId"/>
+        <constructor-arg name="jobName" value="testJobName"/>
+        <constructor-arg name="shardingTotalCount" value="1"/>
+        <constructor-arg name="jobParameter" value="10"/>
+        <constructor-arg name="shardingItemParameters">
+            <map></map>
+        </constructor-arg>
+        <constructor-arg name="jobEventSamplingCount" value="0"/>
+    </bean>
+    <bean id="shardingContext" class="com.dangdang.ddframe.job.api.ShardingContext">
+        <constructor-arg name="shardingContexts" ref="shardingContexts"/>
+        <constructor-arg name="shardingItem" value="0"/>
+    </bean>
+    <bean id="shoppingOrderAutoCancelOrderJob" class="com.lawu.eshop.order.srv.jobs.ShoppingOrderAutoCancelOrderJob"/>
+    <bean id="shoppingOrderAutoRemindToBeCancelledOrderJob" class="com.lawu.eshop.order.srv.jobs.ShoppingOrderAutoRemindToBeCancelledOrderJob"/>
+    <bean id="shoppingOrderAutoCommentOrderJob" class="com.lawu.eshop.order.srv.jobs.ShoppingOrderAutoCommentOrderJob"/>
+    <bean id="shoppingOrderAutoPaymentsToMerchantJob" class="com.lawu.eshop.order.srv.jobs.ShoppingOrderAutoPaymentsToMerchantJob"/>
+    <bean id="shoppingOrderAutoReceiptJob" class="com.lawu.eshop.order.srv.jobs.ShoppingOrderAutoReceiptJob"/>
+    <bean id="shoppingRefundAutoRemindToBeConfirmedForRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindToBeConfirmedForRefundJob"/>
+    <bean id="shoppingRefundAutoToBeConfirmedForRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoToBeConfirmedForRefundJob"/>
+    <bean id="shoppingRefundAutoRemindToBeConfirmedForReturnRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindToBeConfirmedForReturnRefundJob"/>
+    <bean id="shoppingRefundAutoToBeConfirmedForReturnRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoToBeConfirmedForReturnRefundJob"/>
+    <bean id="shoppingRefundFillReturnAddressJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundFillReturnAddressJob"/>
+    <bean id="shoppingRefundAutoRemindFillReturnAddressJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindFillReturnAddressJob"/>
+    <bean id="shoppingRefundRefundFailedJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundRefundFailedJob"/>
+    <bean id="shoppingRefundAutoRemindRefundFailedJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindRefundFailedJob"/>
+    <bean id="shoppingRefundAutoRemindToBeReturnJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindToBeReturnJob"/>
+    <bean id="shoppingRefundToBeReturnJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundToBeReturnJob"/>
+    <bean id="shoppingRefundAutoFirstTimeRemindToBeRefundWithReturnRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoFirstTimeRemindToBeRefundWithReturnRefundJob"/>
+    <bean id="shoppingRefundAutoRefundToBeRefundWithReturnRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRefundToBeRefundWithReturnRefundJob"/>
+    <bean id="shoppingRefundAutoRemindToBeRefundWithRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoRemindToBeRefundWithRefundJob"/>
+    <bean id="shoppingRefundAutoSecondTimeRemindToBeRefundWithReturnRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundAutoSecondTimeRemindToBeRefundWithReturnRefundJob"/>
+    <bean id="shoppingRefundToBeRefundJob" class="com.lawu.eshop.order.srv.jobs.ShoppingRefundToBeRefundJob"/>
+</beans>

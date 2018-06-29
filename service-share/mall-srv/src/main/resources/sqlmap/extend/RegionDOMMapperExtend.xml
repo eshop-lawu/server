@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.mall.srv.mapper.extend.RegionDOMMapperExtend" >
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.mall.srv.domain.extend.RegionDOView" >
+
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="TINYINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getRegionList" resultMap="BaseResultMap" >
+      SELECT
+        id,parent_id,path,level,name
+        FROM
+            `region`
+        ORDER BY
+	    CONVERT (name USING gbk) COLLATE gbk_chinese_ci ASC
+    </select>
+
+
+</mapper>

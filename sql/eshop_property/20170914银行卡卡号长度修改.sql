@@ -1,0 +1,1 @@
+alter table `bank_account` modify column `account_number` VARCHAR(26) NOT NULL COMMENT '账号';

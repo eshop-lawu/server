@@ -1,0 +1,1 @@
+alter table ad add column `merchant_region_path` varchar(25) DEFAULT NULL COMMENT '商家地区' after `merchant_latitude`;

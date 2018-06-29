@@ -1,0 +1,10 @@
+delete from recommend_product_category;
+INSERT INTO `recommend_product_category` VALUES ('1', '1', '食品', '1', '1', '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('2', '2', '美妆', '1', '2', '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('3', '3', '服装', '1', 3, '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('4', '4', '百货', '1', 4, '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('5', '5', '鞋靴箱包', '1', '5', '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('6', '6', '数码家电', '1', 6, '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('7', '7', '内衣饰品', '1', 7, '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('8', '8', '汽车用品', '1', 8, '2017-04-21 00:04:12');
+INSERT INTO `recommend_product_category` VALUES ('9', '9', '其他', '1', 9, '2017-04-21 00:04:12');

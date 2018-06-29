@@ -1,0 +1,1 @@
+alter table merchant_store_audit ADD column `is_show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:展示0不展示' AFTER `type`;

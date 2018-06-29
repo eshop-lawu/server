@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<input id="room-num" placeholder="房间号/参与号" style="height:20px;" value="123" />
+<button type="button" id="btn-connect">创建链接</button>
+<button type="button" id="btn-close">断开链接</button>
+<input type="checkbox" id="heartbeat" checked /> 自动发送心跳（不打印消息）
+<hr />
+
+类型：
+<select id="conn-type">
+    <option value="MINDPK">MINDPK</option>
+    <option value="PUZZLE">PUZZLE</option>
+</select>
+<br />
+
+消息：
+<select id="msg-type">
+    <option value="HEART">HEART-心跳（不打印消息）</option>
+    <option value="ONLINE">ONLINE-上线</option>
+    <option value="REONLINE">REONLINE-重连</option>
+    <option value="READY">READY-准备游戏</option>
+    <option value="START">START-开始游戏</option>
+    <option value="CHECK">CHECK-检查积分扣除</option>
+    <option value="SUBMIT">SUBMIT-提交成绩</option>
+    <option value="REJECT">REJECT-踢人</option>
+    <option value="ABANDON">ABANDON-放弃游戏</option>
+    <option value="TIMEOUT">TIMEOUT-游戏超时</option>
+</select>
+<br />
+
+Token:<input id="token" placeholder="登录token" style="width: 500px;height:20px;" value="eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJNRU1CRVIiLCJqdGkiOiJNOTUwNjE3MjkxOTc0NzcwNjkzIiwic3ViIjoiMTM1Mjg4ODQwNTQiLCJhdWQiOiIxNjYyIiwiaWF0IjoxNTIxMDEwNzQyfQ.ENytcuyJRCofSkKLL13T-Iq1zT3e7zH4ucRdiG6R9m8StBwHn7Ycx9XcWsrsYoaQCdiGl_3OP5gR_HB9NlwlRA" />
+<br />
+发送内容：<br />
+<textarea id="msg" rows="15" cols="80">
+    {"test1":1,"test2":2}
+</textarea>
+<button type="button" id="btn-send">发送</button>
+<div>消息：
+<div id="rev-result"></div>
+</div>
+
+
+<script src=jquery-3.2.1.min.js></script>
+<script>
+
+    var myWebsocket;
+    var stopHeartbeat = false;
+
+    $(function(){
+        $("#btn-connect").click(function(){
+        	var websocketAdderss = "ws://127.0.0.1:9999/";
+        	//var websocketAdderss = "ws:///192.168.1.27:9999/";
+        	//var websocketAdderss = "ws://test.lovelawu.com:12381/";
+        	//var websocketAdderss = "ws://wk.lovelawu.com:80/";
+        	//var websocketAdderss = "wss://ws.edian.shop:443/";
+            if (myWebsocket != undefined && myWebsocket != null && myWebsocket.state() == 1) {
+                alert("请先断开websocket链接");
+                return;
+            }
+            myWebsocket = new MyWebsocket(websocketAdderss + $("#room-num").val(), function() {
+                stopHeartbeat = false;
+                sendHeartbeat();
+            });
+        });
+        $("#btn-close").click(function(){
+            myWebsocket.close();
+        });
+        $("#btn-send").click(function(){
+            if (myWebsocket == undefined || myWebsocket == null || myWebsocket.state() != 1) {
+                alert("请先创建websocket链接");
+                return;
+            }
+            myWebsocket.sendMsg(getMsg($("#msg-type").val(), $("#msg").val()));
+        });
+    });
+
+    function sendHeartbeat() {
+        if (stopHeartbeat) {
+            return;
+        }
+        myWebsocket.sendMsg(getMsg("HEART"));
+        if ($("#heartbeat").is(":checked")) {
+            setTimeout(sendHeartbeat, 1000);
+        }
+    }
+
+    function getMsg(msgType, msg) {
+        var content = '';
+        if (msg != undefined && msg != null && $.trim(msg) != "") {
+            content = ',"content":' + msg;
+        }
+        return '{"type":"' + $("#conn-type").val() + '","msgType":"' + msgType + '","token":"' + $("#token").val() + '"' + content + '}';
+    }
+
+    function MyWebsocket(url, openCallback) {
+        this.websocket = new WebSocket(url);
+        
+        this.websocket.onopen = function() {
+            console.log('connect');
+            $("#rev-result").append( "connect<br />");
+            if (openCallback != undefined) {
+                openCallback();
+            }
+        };
+
+        this.websocket.onmessage = function(e) {
+            var msgJson = e.data;
+            var msg = JSON.parse(msgJson);
+            if (typeof msg == "undefined" || msg == null) {
+            	console.log(msg);
+            	return;
+            }
+            if (msg.ret != 11100) {
+            	console.log('rev: ' + msgJson);
+                $("#rev-result").append("接收：" + msgJson + "<br />");
+            }
+
+        };
+
+        this.websocket.onclose = function() {
+            stopHeartbeat = true;
+            console.log('close connect');
+            $("#rev-result").append( "close connect<br />");
+
+        };
+
+        this.state = function(){
+            return this.websocket.readyState;
+        }
+
+        this.sendMsg = function(json) {
+            //var json = JSON.stringify(msgObj);
+            this.websocket.send(json);
+            var msg = JSON.parse(json);
+            if (msg.msgType != 'HEART') {
+            	console.log('send: ' + json);
+                $("#rev-result").append("发送：" + json + "<br />");
+            }
+        }
+        
+        this.close = function() {
+        	this.websocket.close();
+        }
+    }
+</script>
+</html>

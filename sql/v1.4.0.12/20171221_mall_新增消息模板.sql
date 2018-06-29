@@ -1,0 +1,1 @@
+INSERT INTO `eshop_mall`.`message_template`(`id`, `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES (54, '平台通知', '亲爱的E店商家， 您的{17}{13}逾上架有效期，现已自动下架', 54, '2018-01-29 14:50:38', '2018-01-29 14:50:38');

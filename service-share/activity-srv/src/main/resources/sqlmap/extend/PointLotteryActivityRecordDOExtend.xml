@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.PointLotteryActivityRecordDOMapperExtend">
+
+	<resultMap id="BaseResultMap" type="com.lawu.eshop.activity.srv.domain.extend.PointLotteryActivityRecordDOExtend">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="point_lottery_activity_id" jdbcType="BIGINT" property="pointLotteryActivityId" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="attend_count" jdbcType="INTEGER" property="attendCount" />
+		<result column="prize_name" jdbcType="VARCHAR" property="prizeName" />
+		<result column="prize_image_path" jdbcType="VARCHAR" property="prizeImagePath" />
+		<result column="lottery_time" jdbcType="TIMESTAMP" property="lotteryTime" />
+	</resultMap>
+	
+	<!-- 分组查询已参与的抽奖 -->
+	<select id="attendPrizePage" parameterType="java.lang.String" resultMap="BaseResultMap">
+        
+	   SELECT
+			record.point_lottery_activity_id,
+			count(record.point_lottery_activity_id) AS attend_count,
+			activity.prize_name,
+			activity.prize_image_path,
+			activity.lottery_time
+		FROM 
+			point_lottery_activity_record record
+		LEFT JOIN point_lottery_activity activity ON record.point_lottery_activity_id = activity.id
+		WHERE
+			record.user_num = #{userNum,jdbcType=VARCHAR} 
+		GROUP BY
+			record.point_lottery_activity_id
+		ORDER BY
+			activity.draw_time ASC
+ 	 </select>
+ 	 
+ 	 <!-- 分组查询已参与的抽奖的记录条数 -->
+	<select id="selectCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	    SELECT
+			count(*)
+		FROM
+			(
+				SELECT
+					point_lottery_activity_id
+				FROM
+					point_lottery_activity_record
+				WHERE
+					user_num = #{userNum,jdbcType=VARCHAR}
+				GROUP BY
+					point_lottery_activity_id
+			) activity
+ 	 </select>
+
+	<select id="listLatestLotteryInfo" resultType="com.lawu.eshop.activity.srv.domain.extend.PointLotteryRollView">
+		select plar.mobile,plar.prize_name as prizeName from point_lottery_activity_record as plar
+		inner join point_lottery_activity as pla on plar.point_lottery_activity_id = pla.id
+		where pla.status = 5 and plar.status = 2
+		order by plar.gmt_modified desc
+		limit 20
+	</select>
+
+</mapper>

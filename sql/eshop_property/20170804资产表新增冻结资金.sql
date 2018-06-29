@@ -1,0 +1,1 @@
+alter table property_info add column `freeze_money` decimal(20,6) unsigned NOT NULL DEFAULT '0.000000' COMMENT '冻结资金' after `love_account`;

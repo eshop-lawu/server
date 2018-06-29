@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.ad.srv.mapper.extend.AdDOMapperExtend">
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.ad.srv.domain.AdDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+     <result column="merchant_store_id" jdbcType="BIGINT" property="merchantStoreId" />
+    <result column="merchant_num" jdbcType="VARCHAR" property="merchantNum" />
+    <result column="merchant_longitude" jdbcType="DECIMAL" property="merchantLongitude" />
+    <result column="merchant_latitude" jdbcType="DECIMAL" property="merchantLatitude" />
+     <result column="merchant_store_name" jdbcType="VARCHAR" property="merchantStoreName" />
+    <result column="manage_type" jdbcType="TINYINT" property="manageType" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+     <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="media_url" jdbcType="VARCHAR" property="mediaUrl" />
+    <result column="video_img_url" jdbcType="VARCHAR" property="videoImgUrl" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="put_way" jdbcType="TINYINT" property="putWay" />
+    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="areas" jdbcType="VARCHAR" property="areas" />
+    <result column="radius" jdbcType="INTEGER" property="radius" />
+    <result column="point" jdbcType="DECIMAL" property="point" />
+    <result column="total_point" jdbcType="DECIMAL" property="totalPoint" />
+    <result column="ad_count" jdbcType="INTEGER" property="adCount" />
+    <result column="hits" jdbcType="INTEGER" property="hits" />
+    <result column="viewCount" jdbcType="INTEGER" property="viewcount" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  
+ <sql id="Base_Column_List">
+    id, merchant_id,merchant_store_id,merchant_store_name,manage_type, merchant_num, merchant_longitude, merchant_latitude, title, media_url, 
+    video_img_url, logo_url,content, type, put_way,begin_time, areas,
+    radius, point, total_point, ad_count, hits, viewCount, status
+  </sql>
+  
+  <select id="selectAdAll" parameterType="com.lawu.eshop.ad.srv.domain.extend.AdDOView" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ad
+    <where>
+	      <if test="type != null">
+	       type= #{type,jdbcType=TINYINT}
+	       and status=2
+	       order by hits desc,gmt_create desc
+	      </if>
+	      <!-- 积分榜 -->
+	      <if test="topType ==1">
+	       type=1 and <![CDATA[ status > 0 and status < 3 and begin_time > #{beginAfterTime,jdbcType=TIMESTAMP} ]]>
+	       order by total_point desc 
+	      	 
+	      </if>
+	      <!-- 人气榜 -->
+	      <if test="topType ==2">
+	      	 type=1 and <![CDATA[ status > 0 and status < 3 and begin_time > #{beginAfterTime,jdbcType=TIMESTAMP}  ]]>
+	      	 and point>=20
+	      	 order by point desc
+	      </if>
+    </where>
+  </select>
+  
+  <!-- 点击次数加一 -->
+   <update id="updateHitsByPrimaryKey" parameterType="java.lang.Long">
+    update ad set 
+      hits = hits+1
+    where id = #{id,jdbcType=BIGINT}  and ad_count > hits
+  </update>
+  
+  <!-- 精选广告 -->
+  <select id="selectChoiceness"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ad
+    where
+      	 type !=4 and <![CDATA[ status > 0 and status < 3  ]]>
+      	 order by gmt_create desc
+  </select>
+  
+  <!-- 商家批量删除广告 -->
+  <update id="batchDeleteAd">
+       update ad set status=0 where id in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+   
+   <resultMap id="BaseResultReportAdEarningsMap" type="com.lawu.eshop.ad.srv.domain.extend.ReportAdView">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="merchant_num" jdbcType="VARCHAR" property="merchantNum" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="total_point" jdbcType="DECIMAL" property="totalPoint" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select resultMap="BaseResultReportAdEarningsMap"  id="selectReportAdEarningsByRowbounds" >
+    SELECT 
+     	id,merchant_id,  merchant_num, title, type,  total_point, gmt_create,  status
+    FROM ad 
+    where   <![CDATA[ status > 0 and status < 5  ]]>
+  </select>
+  
+  
+  <select resultType="java.lang.Integer" id="selectReportAdEarningscount" >
+    SELECT 
+     	count(*)
+    FROM ad 
+    where   <![CDATA[ status > 0 and status < 5  ]]>
+  </select>
+  
+	<!-- 
+	                  查询E赚广告(平面广告,视频广告)
+	      ①筛选
+	      1.区域投放,查询用户的所在区域,作为筛选条件
+	      2.粉丝投放,查询用户的所有是粉丝商家,作为筛选条件
+	      3.雷达投放,根据用户以及广告的经度和纬度,以及投放半径,作为筛选条件
+	      4.广告类型,状态为投放中
+	      ②排序
+	      1.根据用户的点击次数,以及投放时间来排序,属于filesort排序,排序的性能比较低,需要继续优化
+	 -->
+	<select resultType="java.lang.Long" id="selectPageAdEgainId" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectAdEgainIdExample">
+		SELECT id FROM ad
+		WHERE type = #{type} AND status = 2 AND
+		(
+		    ( put_way = 1 AND areas IS NULL )
+		    <if test="latitude != null and longitude != null">
+		    OR
+		    ( 
+		      put_way = 3
+		      AND  merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+		      AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+		    )
+		    </if>
+		    <if test="merchantIds != null and merchantIds.size > 0">
+		    OR 
+		    ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+			</if>
+			<if test="areas != null and areas.size > 0">
+			OR
+		    ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+		    </if>
+		)
+		order by hits desc, gmt_create desc
+	</select>
+	
+	<!-- 查询E赚广告总数 -->
+	<select resultType="java.lang.Long" id="selectAdEgainCount" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectAdEgainIdExample">
+        SELECT count(*) FROM ad
+        WHERE type = #{type} AND status = 2 AND
+        (
+            ( put_way = 1 AND areas IS NULL )
+            <if test="latitude != null and longitude != null">
+            OR
+            ( 
+                put_way = 3
+                AND merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+                AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+            )
+            </if>
+            <if test="merchantIds != null and merchantIds.size > 0">
+            OR 
+            ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+            </if>
+            <if test="areas != null and areas.size > 0">
+            OR
+            ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+            </if>
+        )
+    </select>
+    
+    <!-- 
+                       查询广告排行榜(平面广告,视频广告)
+          ①筛选
+          1.区域投放,查询用户的所在区域,作为筛选条件
+          2.粉丝投放,查询用户的所有是粉丝商家,作为筛选条件
+          3.雷达投放,根据用户以及广告的经度和纬度,以及投放半径,作为筛选条件
+          4.广告类型(平面广告和视频广告),状态(上架和投放中),以及广告的开始时间
+          ②排序
+          1.根据广告的积分和总积分来排序,属于filesort排序,排序的性能比较低,需要继续优化
+     -->
+    <select resultType="java.lang.Long" id="selectAdPointIdExample" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectAdPointIdExample">
+        SELECT id FROM ad
+        WHERE
+        type IN (1, 2) AND status IN (1, 2) AND begin_time > #{beginTime} AND
+        (
+            ( put_way = 1 AND areas IS NULL )
+            <if test="latitude != null and longitude != null">
+            OR
+            ( 
+              put_way = 3
+              AND  merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+              AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+            )
+            </if>
+            <if test="merchantIds != null and merchantIds.size > 0">
+            OR 
+            ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+            </if>
+            <if test="areas != null and areas.size > 0">
+            OR
+            ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+            </if>
+        )
+        order by 
+        <choose>
+	        <when test="orderType == 1">
+	             total_point desc
+	        </when>
+	        <when test="orderType == 2">
+                 point desc
+            </when>
+        </choose>
+        LIMIT 0,10
+    </select>
+    
+    <!-- 
+                      查询精选推荐广告(平面广告,视频广告)
+          ①筛选
+          1.区域投放,查询用户的所在区域,作为筛选条件
+          2.粉丝投放,查询用户的所有是粉丝商家,作为筛选条件
+          3.雷达投放,根据用户以及广告的经度和纬度,以及投放半径,作为筛选条件
+          4.广告类型,状态为投放中
+          ②排序
+          1.根据用户的点击次数,以及投放时间来排序,属于filesort排序,排序的性能比较低,需要继续优化
+     -->
+    <select resultType="java.lang.Long" id="selectPageChoicenessAdId" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectChoicenessAdIdExample">
+        SELECT id FROM ad
+        WHERE (type IN (1, 2) AND status = 2) OR (type = 3 AND status IN (1, 2)) AND
+        (
+            ( put_way = 1 AND areas IS NULL )
+            <if test="latitude != null and longitude != null">
+            OR
+            ( 
+              put_way = 3
+              AND  merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+              AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+            )
+            </if>
+            <if test="merchantIds != null and merchantIds.size > 0">
+            OR 
+            ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+            </if>
+            <if test="areas != null and areas.size > 0">
+            OR
+            ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+            </if>
+        )
+        ORDER BY gmt_create DESC
+    </select>
+    
+    <!-- 查询精选推荐广告总数 -->
+    <select resultType="java.lang.Long" id="selectChoicenessAdCount" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectChoicenessAdIdExample">
+        SELECT count(*) FROM ad
+        WHERE (type IN (1, 2) AND status = 2) OR (type = 3 AND status IN (1, 2)) AND
+        (
+            ( put_way = 1 AND areas IS NULL )
+            <if test="latitude != null and longitude != null">
+            OR
+            ( 
+                put_way = 3
+                AND merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+                AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+            )
+            </if>
+            <if test="merchantIds != null and merchantIds.size > 0">
+            OR 
+            ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+            </if>
+            
+            <if test="areas != null and areas.size > 0">
+            OR
+            ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+            </if>
+        )
+    </select>
+    
+</mapper>

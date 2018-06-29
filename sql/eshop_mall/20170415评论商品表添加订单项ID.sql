@@ -1,0 +1,1 @@
+alter table comment_product add order_item_id bigint(20) NOT NULL  COMMENT '订单项ID'  after product_id;

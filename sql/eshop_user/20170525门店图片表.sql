@@ -1,0 +1,1 @@
+alter table `merchant_store_image`  modify  column  `path` varchar(1200) DEFAULT NULL;

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="d:/maven/repository/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"/>
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 分页相关 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <!-- 带上序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- xml文件不追加的插件 -->
+        <plugin type="com.lawu.mybatis.plugin.OverIsMergeablePlugin" />
+        <!-- 忽略所有注释 -->
+        <commentGenerator type="com.lawu.mybatis.generator.EshopCommentGenerator">
+            <!--<property name="suppressAllComments" value="true"/>-->
+            <!-- 忽略日期注释 -->
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.22:3306/eshop_activity?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"
+                        userId="root" password="1qazXSW@">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.lawu.eshop.activity.srv.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="sqlmap" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lawu.eshop.activity.srv.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--
+        <table tableName="help_redpacket_invite_record" domainObjectName="HelpRedpacketInviteRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="help_redpacket_attend_detail" domainObjectName="HelpRedpacketAttendDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="redpacket_send_record" domainObjectName="RedpacketSendRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="help_redpacket_activity" domainObjectName="HelpRedpacketActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="draw_lottery_activity" domainObjectName="DrawLotteryActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="draw_lottery_activity_record" domainObjectName="DrawLotteryActivityRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="help_redpacket_activity" domainObjectName="HelpRedpacketActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="draw_lottery_activity_month_record" domainObjectName="DrawLotteryActivityMonthRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="help_redpacket_activity" domainObjectName="HelpRedpacketActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_lottery_activity_prize_image" domainObjectName="PointLotteryActivityPrizeImageDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_lottery_activity_report" domainObjectName="PointLotteryActivityReportDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_lottery_activity_record" domainObjectName="PointLotteryActivityRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_lottery_activity_order" domainObjectName="PointLotteryActivityOrderDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_lottery_activity" domainObjectName="PointLotteryActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="draw_lottery_activity_prize" domainObjectName="DrawLotteryActivityPrizeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+         <table tableName="rich_power_record" domainObjectName="RichPowerRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+         <table tableName="rich_power_task_record" domainObjectName="RichPowerTaskRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="rich_account" domainObjectName="RichAccountDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="rich_config" domainObjectName="RichConfigDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="rich_diamond_record" domainObjectName="RichDiamondRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="rich_diamond_info" domainObjectName="RichDiamondInfoDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="rich_diamond_distribution_record" domainObjectName="RichDiamondDistributionRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        -->
+       <table tableName="rich_config" domainObjectName="RichConfigDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+         <table tableName="rich_merchant_power_task_record" domainObjectName="RichMerchantPowerTaskRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

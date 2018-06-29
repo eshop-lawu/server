@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.FansInviteContentDOMapperExtend" >
+
+  <select id="listOverdueFansInvite" parameterType="com.lawu.eshop.user.param.UserFansParam" resultType="com.lawu.eshop.user.srv.domain.extend.FansInviteContentDOView">
+      select id,merchant_id as merchantId from fans_invite_content where gmt_create &lt;= SUBDATE(#{gmtCreate},interval 24 hour) and is_overdue = 0 limit #{offset},#{pageSize};
+  </select>
+</mapper>

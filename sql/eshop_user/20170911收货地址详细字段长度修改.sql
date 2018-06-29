@@ -1,0 +1,1 @@
+alter table `address`  modify  column  `addr` varchar(100)  COMMENT '详细地址' after region_name ;

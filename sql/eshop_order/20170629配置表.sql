@@ -1,0 +1,2 @@
+-- 用户添加购物车数量限制
+INSERT INTO `eshop_order`.`property` (`id`, `name`, `value`, `remark`, `gmt_create`, `gmt_modified`) VALUES ('24', 'max_shopping_cart_quantity', '100', '用户添加购物车数量', '2017-06-29 16:19:08', '2017-06-29 16:19:10');

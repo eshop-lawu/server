@@ -1,0 +1,2 @@
+INSERT INTO `eshop_mall`.`message_template` ( `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ( '资金冻结', '亲爱的{0}：您的资金账户已被冻结，有疑问请致电E店客服400-000-1111', '44', '2017-07-06 11:15:19', '2017-07-06 11:15:19');
+INSERT INTO `eshop_mall`.`message_template` ( `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ( '资金解冻', '亲爱的{0}：您的资金账户已解除冻结，恢复正常使用，有疑问请致电E店客服400-000-1111', '45', '2017-07-06 11:15:19', '2017-07-06 11:15:19');

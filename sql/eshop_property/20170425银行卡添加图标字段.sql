@@ -1,0 +1,1 @@
+ alter table bank add  `icon_url` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null COMMENT '图标路径' after name;

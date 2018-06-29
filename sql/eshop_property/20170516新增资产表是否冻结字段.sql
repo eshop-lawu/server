@@ -1,0 +1,1 @@
+alter table property_info add column `freeze` tinyint(2) NOT NULL DEFAULT '0' COMMENT '是否冻结(0-否1-是)' after `pay_password`;

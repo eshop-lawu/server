@@ -1,0 +1,1 @@
+update industry_type set status=0 where id >1000;

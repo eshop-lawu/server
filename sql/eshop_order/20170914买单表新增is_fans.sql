@@ -1,0 +1,1 @@
+ALTER TABLE `pay_order` ADD COLUMN `is_fans` tinyint(1) unsigned NOT NULL COMMENT '买单前用户是否是商家的粉丝' AFTER `order_status`;

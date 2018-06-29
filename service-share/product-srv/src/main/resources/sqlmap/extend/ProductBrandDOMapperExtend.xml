@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.ProductBrandDOMapperExtend">
+
+    <select id="getOperatorProductBrandList" resultType="com.lawu.eshop.product.srv.domain.extend.OperatorProductBrandDOView"
+            parameterType="com.lawu.eshop.product.param.OperatorProductBrandParam">
+       SELECT
+            b.id as id,
+            b.brand_name as brandName,
+            b.ordinal as ordinal,
+            b.product_category_id as productCategoryId,
+            c.name as categoryName,
+            b.gmt_create as gmtCreate
+        FROM
+            product_brand AS b
+        INNER JOIN product_category AS c ON b.product_category_id = c.id
+        WHERE b.status = 1
+        <if test="productCategoryId != null">
+           AND b.product_category_id = #{productCategoryId}
+        </if>
+        <if test="brandName != null and  brandName != ''">
+            AND b.brand_name = #{brandName}
+        </if>
+        ORDER BY c.id asc, b.ordinal asc
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="getOperatorProductBrandListCount" resultType="java.lang.Integer"
+            parameterType="com.lawu.eshop.product.param.OperatorProductBrandParam">
+        SELECT
+        count(b.id)
+        FROM
+        product_brand AS b
+        INNER JOIN product_category AS c ON b.product_category_id = c.id
+        WHERE b.status = 1
+        <if test="productCategoryId != null">
+            AND b.product_category_id = #{productCategoryId}
+        </if>
+        <if test="brandName != null  and  brandName != ''">
+            AND  b.brand_name = #{brandName}
+        </if>
+    </select>
+
+</mapper>

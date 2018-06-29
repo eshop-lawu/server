@@ -1,0 +1,22 @@
+CREATE TABLE `report_ad_earnings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `ad_id` bigint(20) unsigned NOT NULL COMMENT '广告id',
+  `merchant_num` varchar(19) NOT NULL COMMENT '商家编号',
+  `merchant_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '商家名',
+  `ad_title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '广告名',
+  `ad_type` tinyint(2) NOT NULL COMMENT '广告类型(1-平面2-视频3-抢赞4-红包)',
+  `ad_create_time` datetime NOT NULL COMMENT '广告创建时间',
+  `ad_status` tinyint(2) NOT NULL COMMENT '状态(1-上架2-投放中3-投放结束)',
+  `ad_total_point` decimal(10,6) unsigned NOT NULL COMMENT '广告总投放积分',
+  `user_total_point` decimal(10,6) unsigned NOT NULL COMMENT '用户总收益',
+  `love_total_point` decimal(10,6) unsigned NOT NULL COMMENT '爱心账户收益',
+  `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态(0异常1正常)',
+  `is_processed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否处理',
+  `auditor_id` bigint(20) unsigned DEFAULT NULL COMMENT '操作人员ID',
+  `auditor_account` varchar(50) NOT NULL DEFAULT '' COMMENT '操作人员用户名',
+  `remark` varchar(200) DEFAULT NULL COMMENT '操作备注',
+  `audit_time` datetime DEFAULT NULL COMMENT '操作时间',
+  `gmt_modified` datetime NOT NULL COMMENT '修改时间',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='广告投放收益表';

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.InviteRelationDOExtendMapper" >
+    <!-- 根据当前用户编号删除上三级与下三级的关联   -->
+    <update id="deleteRelationship">
+        UPDATE invite_relation SET is_del=1 WHERE id IN (
+            SELECT tmp.id FROM (
+                SELECT id FROM invite_relation 
+                WHERE user_num  IN (
+                    SELECT user_num FROM invite_relation WHERE invite_user_num = #{num,jdbcType=VARCHAR} AND depth BETWEEN 0 AND 3
+                )
+                AND invite_user_num IN (
+                    SELECT invite_user_num FROM invite_relation WHERE user_num = #{num,jdbcType=VARCHAR} AND depth BETWEEN 0 AND 3
+                )
+                AND (user_num != #{num,jdbcType=VARCHAR} OR invite_user_num != #{num,jdbcType=VARCHAR})
+            ) AS tmp
+        )
+    </update>
+    
+    <!-- 根据当前用户编号以及下级用户编号恢复关联  -->
+    <update id="restoreRelationship">
+        UPDATE invite_relation SET is_del=0 WHERE id IN (
+            SELECT tmp.id FROM (
+                SELECT id FROM invite_relation 
+                WHERE user_num = #{num,jdbcType=VARCHAR}
+                <if test="lowerLevelNums != null and lowerLevelNums.size > 0">
+                    AND invite_user_num IN <foreach collection="lowerLevelNums" item="listItem" open="(" close=")" separator="," >#{listItem}</foreach>
+                </if>
+            ) AS tmp
+        )
+    </update>
+    
+    <!-- 根据用户编号查询下一级未被冻结的用户编号  -->
+    <select id="lowerLevelNumByDepth" resultType="java.lang.String" >
+        SELECT ir.invite_user_num FROM invite_relation ir LEFT JOIN member m ON ir.invite_user_num=m.num WHERE (m.is_freeze=0 OR m.frozen_type!=2)
+        <if test="userNums != null and userNums.size > 0">
+            AND ir.user_num IN <foreach collection="userNums" item="listItem" open="(" close=")" separator="," >#{listItem}</foreach>
+        </if>
+        AND ir.invite_user_num LIKE "M%" AND ir.depth=1
+        UNION
+        SELECT ir.invite_user_num FROM invite_relation ir LEFT JOIN merchant m ON ir.invite_user_num=m.num WHERE (m.is_freeze=0 OR m.frozen_type!=2)  
+        <if test="userNums != null and userNums.size > 0">
+            AND ir.user_num IN <foreach collection="userNums" item="listItem" open="(" close=")" separator="," >#{listItem}</foreach>
+        </if>
+        AND ir.invite_user_num LIKE "B%" AND ir.depth=1
+    </select>
+</mapper>

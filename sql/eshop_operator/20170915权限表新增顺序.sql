@@ -1,0 +1,1 @@
+ALTER TABLE `permission` ADD COLUMN `sort_id` int(4) DEFAULT 999 COMMENT '排序' AFTER `parent_id`;

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.MemberDOMapperExtend" >
+	
+	<resultMap id="BaseResultMap" type="com.lawu.eshop.user.srv.domain.extend.MemberDOView" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+	    <result column="region_path" property="regionPath" jdbcType="VARCHAR" />
+	    <result column="headimg" property="headimg" jdbcType="VARCHAR" />
+	    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+	 </resultMap>
+	 
+	 <resultMap id="BaseAllResultMap" type="com.lawu.eshop.user.srv.domain.MemberDO" >
+	    <id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="num" property="num" jdbcType="VARCHAR" />
+	    <result column="account" property="account" jdbcType="VARCHAR" />
+	    <result column="pwd" property="pwd" jdbcType="CHAR" />
+	    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+	    <result column="region_path" property="regionPath" jdbcType="VARCHAR" />
+	    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+	    <result column="sex" property="sex" jdbcType="TINYINT" />
+	    <result column="birthday" property="birthday" jdbcType="DATE" />
+	    <result column="headimg" property="headimg" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="TINYINT" />
+	    <result column="inviter_id" property="inviterId" jdbcType="BIGINT" />
+	    <result column="inviter_type" property="inviterType" jdbcType="TINYINT" />
+	    <result column="level" property="level" jdbcType="INTEGER" />
+	    <result column="property_id" property="propertyId" jdbcType="BIGINT" />
+	    <result column="gt_cid" property="gtCid" jdbcType="VARCHAR" />
+	    <result column="ry_token" property="ryToken" jdbcType="VARCHAR" />
+	    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+	    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+	  </resultMap>
+
+    <update id="delUserGtPush"  parameterType="java.lang.Long">
+      update member set gt_cid = NULL where id = #{memberId}
+    </update>
+    
+    <select id="getMemberByIds" resultMap="BaseResultMap">
+        SELECT
+      	   id,
+       	   mobile,
+       	   region_path,
+       	   nickname as nickname,
+       	   headimg
+        FROM
+        member
+        where id in
+        <foreach collection="list" item="memberId" open="(" close=")" separator=",">
+            #{memberId}
+        </foreach>
+    </select>
+    
+    <sql id="Base_Column_List" >
+	    id, num, account, pwd, mobile, name, nickname, region_path, region_name, sex, birthday, 
+	    headimg, status, inviter_id, inviter_type, level, property_id, gt_cid, ry_token, 
+	    gmt_modified, gmt_create
+  	</sql>
+    
+    <select id="selectByExampleWithRowbounds" resultMap="BaseAllResultMap" parameterType="com.lawu.eshop.user.srv.domain.extend.InviterUserDOView" >
+	    select
+	    id,mobile,nickname,headimg,level,gmt_create,sex
+	    from member
+	    where inviter_id = ${inviterId} and status = ${status} and inviter_type = ${inviterType} 
+	    <if test="content != null" >
+	    	and (account like #{content} or nickname like #{content})
+	    </if>
+	    limit ${offset} ,${limit}
+	  </select>
+
+	<select id="selectNumLikeContent" resultType="java.lang.String" parameterType="java.lang.String" >
+		select
+		num
+		from member
+		where status = 1 and (account like #{queryContent} or nickname like #{queryContent}
+		<if test="_parameter == '%E店用户%'.toString()" >
+			or nickname is null
+		</if>
+		)
+	</select>
+
+	<select id="abnormalMemberList" resultType="com.lawu.eshop.user.srv.domain.extend.AbnormalAccountDOView" parameterType="com.lawu.eshop.user.param.AbnormalJobParam">
+
+		SELECT
+		m.id,m.account,m.num as userNum
+		FROM
+		member_profile as p
+		inner join member as m
+		on p.id = m.id
+		WHERE
+		p.invite_member_count + p.invite_merchant_count  &gt;#{tapeOutNumber}
+		AND m.is_freeze = 0
+		AND p.gmt_modified &gt;= #{startTime}
+		AND p.gmt_modified &lt;= #{endTime}
+		limit #{offset},#{pageSize}
+
+	</select>
+
+	<select id="memberSameIpCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.SameIpCountParam">
+		SELECT count(reg_ip) as c FROM member_profile where id in(
+		SELECT
+			id
+		FROM
+			member
+		WHERE
+			inviter_id =#{id}
+		AND inviter_type = #{type}
+		)
+		GROUP BY reg_ip
+		order BY c desc
+
+	</select>
+
+	<!-- 邀请用户总数-->
+	<select id="inviteMemberTotalCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.SameIpCountParam">
+		SELECT count(1)  FROM member_profile where id in(
+		SELECT
+		id
+		FROM
+		member
+		WHERE
+		inviter_id =#{id}
+		AND inviter_type = #{type}
+		)
+
+
+	</select>
+
+    <!-- 根据用户编号标记改用户所有的一级下线为僵尸账户 -->
+    <update id="updateZombieAccount">
+        UPDATE member set is_zombie = #{isZombie,jdbcType=BIT} WHERE num IN (
+            SELECT invite_user_num FROM invite_relation WHERE user_num = #{num,jdbcType=VARCHAR} AND depth = 1 AND invite_user_num LIKE "M%"
+        )
+    </update>
+    
+    
+    <select id="findMemberCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.srv.domain.extend.AreasCountView">
+		SELECT
+			count(*)
+		FROM
+			 member m 
+		WHERE
+			 m.`status` =1
+		
+		<if test="sex != null">
+			and m.sex = #{sex}
+		</if>
+		<if test="minAge != null and maxAge !=null">
+			and TIMESTAMPDIFF(YEAR, m.birthday, CURDATE()) BETWEEN #{minAge} and #{maxAge}
+		</if>
+		<if test="areas != null and  areas.size > 0 ">
+			AND <foreach collection="areas" item="area" open="(" close=")" separator="or" >find_in_set(#{area},REPLACE(m.region_path,'/',','))</foreach>
+		</if>
+	</select>
+</mapper>

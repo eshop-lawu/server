@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="F:/1/maven/repository/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"/>
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 分页相关 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <!-- 带上序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- xml文件不追加的插件 -->
+        <plugin type="com.lawu.mybatis.plugin.OverIsMergeablePlugin" />
+        <!-- 忽略所有注释 -->
+        <commentGenerator type="com.lawu.mybatis.generator.EshopCommentGenerator">
+            <!--<property name="suppressAllComments" value="true"/>-->
+            <!-- 忽略日期注释 -->
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.22:3306/eshop_property?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root" password="1qazXSW@">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.lawu.eshop.property.srv.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="sqlmap" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lawu.eshop.property.srv.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--
+        <table tableName="bank" domainObjectName="BankDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="bank_account" domainObjectName="BankAccountDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="property" domainObjectName="PropertyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="withdraw_cash" domainObjectName="WithdrawCashDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="recharge" domainObjectName="RechargeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="freeze" domainObjectName="FreezeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="business_deposit" domainObjectName="BusinessDepositDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="fans_invite_detail" domainObjectName="FansInviteDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="point_detail" domainObjectName="PointDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="transaction_detail" domainObjectName="TransactionDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="property_info" domainObjectName="PropertyInfoDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="love_detail" domainObjectName="LoveDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="pay_platform_log" domainObjectName="PayPlatformLogDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="income_daily_summary" domainObjectName="IncomeDailySummaryDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.property.srv.mapper.extend.PointDetailDOMapperExtend" >
+
+	<resultMap id="BaseResultMap" type="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    <result column="user_totle_point" jdbcType="DECIMAL" property="userTotalPoint" />
+	    <result column="love_totle_point" jdbcType="DECIMAL" property="loveTotalPoint" />
+	</resultMap>
+	
+	<resultMap id="ReportAdGroupByAreaResultMap" type="com.lawu.eshop.property.srv.domain.extend.ReportAdPointGroupByAreaView">
+	    <result column="total_point" jdbcType="DECIMAL" property="totalPoint" />
+	    <result column="area_id" jdbcType="INTEGER" property="areaId"/>
+	</resultMap>
+  
+ 	<select id="getReportAdEarningsPoint"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    select
+	    	sum(point) as user_totle_point
+	    from point_detail
+	    where
+	      	point_type =#{pointType,jdbcType=TINYINT}
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	 </select>
+	 
+	 
+	 <select id="getReportAdEarningsLovePoint"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    select
+	    	sum(amount) as love_totle_point
+	    from love_detail
+	    where
+	      	love_type =#{pointType,jdbcType=TINYINT}
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	 </select>
+	 
+	 <!-- 用户广告总收益统计   包括点广告  红包   广告提成  抢赞  -->
+	 <select id="getUserPointByBzId"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    select
+	    	sum(point) as user_totle_point
+	    from point_detail
+	    where
+	      	point_type in (2,3,5,16)
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	      	
+	 </select>
+	 
+	 
+	 <select id="getLovePointByBzId"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    select
+	    	sum(amount) as love_totle_point
+	    from love_detail
+	    where
+	      	love_type in (1,2,5,6)
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	 </select>
+	 
+	 <select id="getReportAdPointGroupByArea"  resultMap="ReportAdGroupByAreaResultMap" parameterType="java.lang.String">
+	    select
+	    	sum(point) as total_point,area_id
+	    from point_detail
+	    where
+	      	point_type=110 and (gmt_create &gt;= #{bdate} and gmt_create &lt;= #{edate}) group by area_id
+	 </select>
+	 
+	 <select id="getAreaPointConsume"  resultType="com.lawu.eshop.property.srv.domain.extend.AreaPointConsumeDOView" parameterType="com.lawu.eshop.property.param.ReportAgentAreaPointParam">
+	    select
+	    	sum(point) as totalPoint,area_id as areaId,city_id as cityId,province_id as provinceId,left(user_num,1) as type
+	    from point_detail
+	    where
+	      	point_type in(109,110,111,14) and area_id is not null and (gmt_create &gt;= #{beginDate} and gmt_create &lt;= #{endDate})
+	      	group by area_id,city_id,province_id,left(user_num,1)
+	    limit #{offset},#{pageSize}
+	 </select>
+	 
+	 <select id="getAreaPointRefund"  resultType="com.lawu.eshop.property.srv.domain.extend.AreaPointConsumeDOView" parameterType="com.lawu.eshop.property.param.ReportAgentAreaPointParam">
+	    select
+	    	sum(point) as totalPoint,area_id as areaId,city_id as cityId,province_id as provinceId,left(user_num,1) as type
+	    from point_detail
+	    where
+	      	point_type = 112 and area_id is not null  and (gmt_create &gt;= #{beginDate} and gmt_create &lt;= #{endDate})
+	      	group by area_id,city_id,province_id,left(user_num,1)
+	    limit #{offset},#{pageSize}
+	 </select>
+
+	<resultMap id="IncomeMsgResultMap" type="com.lawu.eshop.property.srv.domain.extend.IncomeMsgDOView">
+		<result column="user_num" jdbcType="VARCHAR" property="userNum" />
+		<result column="point" jdbcType="DECIMAL" property="money" />
+		<result column="point_type" jdbcType="TINYINT" property="bType" />
+	</resultMap>
+
+	<select id="getIncomeMsgDataList"  resultMap="IncomeMsgResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.IncomeMsgExample">
+		SELECT
+			user_num,
+			point_type,
+			sum(point) point
+		FROM
+			point_detail
+		WHERE
+			point_type IN (5,12, 13, 102,115, 116)
+		AND gmt_create BETWEEN #{begin}
+		AND #{end}
+		group by user_num,point_type LIMIT ${offset},${pageSize}
+	</select>
+
+	<select id="getIncomeMsgTotalDataList"  resultMap="IncomeMsgResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.IncomeMsgExample">
+		SELECT
+		user_num,
+		sum(point) point
+		FROM
+		point_detail
+		WHERE
+		point_type IN (5,12, 13, 102,115, 116)
+		AND gmt_create BETWEEN #{begin}
+		AND #{end}
+		group by user_num
+	</select>
+	
+	<!-- 积分查询统计 -->
+	<resultMap id="PointReportResultMap" type="com.lawu.eshop.property.srv.domain.extend.PointDOView">
+        <result column="user_type" property="userType" jdbcType="VARCHAR"/>
+        <result column="sum_recharge_money" property="sumRechargeMoney" jdbcType="DECIMAL"/>
+    </resultMap>
+	
+	<select id="selectPointDetailListByDateAndDirection"  resultMap="PointReportResultMap"  parameterType="com.lawu.eshop.property.srv.domain.extend.PointReportDOView">
+		SELECT
+			LEFT(p.user_num,1) as user_type,
+			sum(p.point) as sum_recharge_money
+		FROM
+			point_detail p
+		WHERE
+			p.direction=${direction}
+		AND p.gmt_create BETWEEN #{bdate} and #{edate}
+		GROUP BY
+			LEFT(p.user_num,1)
+	</select>
+
+	<select id="selectPointDetailListByDateAndDirectionAndPointType"  resultMap="PointReportResultMap"  parameterType="com.lawu.eshop.property.srv.domain.extend.PointReportDOView">
+		SELECT
+		LEFT(p.user_num,1) as user_type,
+		sum(p.point) as sum_recharge_money
+		FROM
+		point_detail p
+		WHERE
+		p.direction=${direction} and point_type=#{pointType}
+		AND p.gmt_create BETWEEN #{bdate} and #{edate}
+		GROUP BY
+		LEFT(p.user_num,1)
+	</select>
+</mapper>

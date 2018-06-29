@@ -1,0 +1,1 @@
+alter table favorite_merchant ADD column `manage_type` tinyint(2) NOT NULL COMMENT '1-普通商户 2-实体店铺';

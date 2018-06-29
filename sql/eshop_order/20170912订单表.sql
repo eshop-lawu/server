@@ -1,0 +1,2 @@
+-- 凭证图片长度调整，上传多张图片报错
+ALTER TABLE `shopping_refund_detail` MODIFY COLUMN `voucher_picture`  varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '凭证图片' AFTER `description`;

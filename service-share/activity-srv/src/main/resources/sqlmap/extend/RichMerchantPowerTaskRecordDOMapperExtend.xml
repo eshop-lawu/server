@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.RichMerchantPowerTaskRecordDOMapperExtend">
+
+	<update id="updatePowerTaskRecord" parameterType="com.lawu.eshop.activity.srv.domain.extend.RichMerchantPowerTaskRecordDOExtend">
+        UPDATE rich_merchant_power_task_record
+        
+        <if test="type == 1">
+            set is_login = 1
+        </if>
+        <if test="type == 2">
+            set friend_invite_count = friend_invite_count+1
+        </if>
+        <if test="type == 6">
+            set is_binding_alipay = 1
+        </if>
+        <if test="type == 9">
+             set is_binding_wx = 1
+        </if>
+        <if test="type == 10">
+            set recharge_point = recharge_point+#{point}
+        </if>
+        <if test="type == 11">
+            set fens_invite_count = fens_invite_count + #{fensInviteCount}
+        </if>
+        <if test="type == 12">
+            set ad_count = ad_count +1
+        </if>
+        <if test="type == 13">
+            set new_product_count = new_product_count +1
+        </if>
+        <if test="type == 14">
+            set activity_count = activity_count +1
+        </if>
+        ,gmt_modified = sysdate()
+        
+        where user_num =#{merchantNum}
+    </update>
+
+</mapper>

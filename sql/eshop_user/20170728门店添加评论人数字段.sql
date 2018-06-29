@@ -1,0 +1,1 @@
+alter table `merchant_store` add column  `comments_count` INT(10) UNSIGNED NULL DEFAULT '0' COMMENT '评价人数' after `buy_numbers`;

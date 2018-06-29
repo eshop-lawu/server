@@ -1,0 +1,2 @@
+ALTER TABLE fans_invite_content ADD COLUMN `refuse_number` INT(10) UNSIGNED NULL DEFAULT '0' COMMENT '拒绝人数' AFTER `fans_invite_detail_id`;
+ALTER TABLE fans_invite_content ADD COLUMN `is_overdue` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否过期: 0--否, 1--是' AFTER `fans_invite_detail_id`;

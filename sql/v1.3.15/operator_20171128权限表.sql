@@ -1,0 +1,4 @@
+-- 抢购活动运营平台相关权限
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('161', '新增抢购活动', 'seckillActivity:add', NULL, '145', '999', '2017-11-28 14:08:17', '2017-11-28 14:08:20');
+UPDATE `eshop_operator`.`permission` SET `id`='145', `permission_name`='抢购活动审核', `permission_key`='seckillActivity:page', `permission_url`='seckill-activity/seckill-activity-list.html', `parent_id`='137', `sort_id`='999', `gmt_modified`='2017-11-27 17:20:32', `gmt_create`='2017-11-27 17:20:35' WHERE (`id`='145');
+UPDATE `eshop_operator`.`permission` SET `id`='151', `permission_name`='抢购活动商品', `permission_key`='seckillActivityProduct:pageSearch', `permission_url`=NULL, `parent_id`='137', `sort_id`='999', `gmt_modified`='2017-11-27 17:26:32', `gmt_create`='2017-11-27 17:26:34' WHERE (`id`='151');

@@ -1,0 +1,2 @@
+-- 订单的收货地址地段是由region_name和addr字段组合，所有字段长度调整为180
+ALTER TABLE `shopping_order` MODIFY COLUMN `consignee_address`  varchar(180) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '收货人地址' AFTER `consignee_name`;

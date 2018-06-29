@@ -1,0 +1,2 @@
+alter table member add column `freeze_reason` VARCHAR(200) DEFAULT NULL COMMENT '冻结原因' after `is_freeze`;
+alter table merchant add column `freeze_reason` VARCHAR(200) DEFAULT NULL COMMENT '冻结原因' after `is_freeze`;

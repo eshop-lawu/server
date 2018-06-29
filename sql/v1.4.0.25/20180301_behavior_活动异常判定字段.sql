@@ -1,0 +1,1 @@
+alter table eshop_behavior.invite_abnormal_decide_record add column `is_activity_abnormal` tinyint(1) DEFAULT '0' COMMENT '是否活动注册异常' after `is_abnormal`;

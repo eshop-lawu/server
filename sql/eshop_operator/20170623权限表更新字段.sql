@@ -1,0 +1,1 @@
+UPDATE permission SET permission_name='保证金管理' where permission_key='depositcash:list'

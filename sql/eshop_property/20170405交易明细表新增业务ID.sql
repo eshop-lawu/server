@@ -1,0 +1,1 @@
+alter table transaction_detail add column `biz_id` bigint(20) DEFAULT 0 COMMENT '业务类型操作对应的业务表ID' after `third_transaction_num`;

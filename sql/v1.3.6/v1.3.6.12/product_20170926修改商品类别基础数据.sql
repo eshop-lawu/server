@@ -1,0 +1,10 @@
+delete from product_category;
+INSERT INTO `product_category` VALUES ('1', '食品', '0', '1', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('2', '美妆', '0', '2', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('3', '服装', '0', '3', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('4', '百货', '0', '4', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('5', '鞋靴箱包', '0', '5', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('6', '数码家电', '0', '6', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('7', '内衣饰品', '0', '7', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('8', '汽车用品', '0', '8', '1', '50', '1', '0', '0');
+INSERT INTO `product_category` VALUES ('9', '其他', '0', '9', '1', '50', '1', '0', '0');

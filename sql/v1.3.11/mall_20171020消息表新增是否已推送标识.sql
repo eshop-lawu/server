@@ -1,0 +1,1 @@
+alter table `eshop_mall`.message add column  `is_push` tinyint(1) default 1  COMMENT '是否已推送消息' after status;

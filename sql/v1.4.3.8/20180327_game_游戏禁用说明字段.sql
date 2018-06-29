@@ -1,0 +1,2 @@
+alter table `eshop_game`.`game_puzzle_config` add column  forbidden_remark varchar(500) default NULL COMMENT '禁用说明' after status;
+alter table `eshop_game`.`game_mind_config` add column  forbidden_remark varchar(500) default NULL COMMENT '禁用说明' after status;

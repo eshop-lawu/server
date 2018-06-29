@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportUserActiveDOMapperExtend">
+
+    <select id="getUserActiveListDaily" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportUserActiveDOView"
+            parameterType="com.lawu.eshop.statistics.param.UserActiveParam">
+        select member_count as memberCount,merchant_count as merchantCount,gmt_report as gmtReport
+        from report_user_active_daily where year(gmt_report)=#{year} and month(gmt_report)=#{month}
+    </select>
+
+    <select id="getUserActiveListMonth" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportUserActiveDOView"
+            parameterType="com.lawu.eshop.statistics.param.UserActiveParam">
+        select member_count as memberCount,merchant_count as merchantCount,gmt_report as gmtReport
+        from report_user_active_month where year(gmt_report)=#{year}
+    </select>
+
+
+</mapper>

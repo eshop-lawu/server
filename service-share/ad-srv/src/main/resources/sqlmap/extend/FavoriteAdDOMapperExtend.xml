@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.ad.srv.mapper.extend.FavoriteAdDOMapperExtend">
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.ad.srv.domain.extend.FavoriteAdDOView">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="ad_id" jdbcType="BIGINT" property="AdId" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="media_url" jdbcType="VARCHAR" property="mediaUrl" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="video_img_url" jdbcType="VARCHAR" property="videoImgUrl" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+     <result column="praise_type" jdbcType="TINYINT" property="praiseType" />
+  </resultMap>
+ 
+  <select resultMap="BaseResultMap" parameterType="com.lawu.eshop.ad.srv.domain.extend.FavoriteAdDOView" id="selectMyFavoriteAdByRowbounds" >
+     select 
+    	fa.id as id,
+    	fa.ad_id as ad_id,
+    	a.title as title,
+    	a.content as content,
+		a.media_url as media_url,
+		a.video_img_url as video_img_url,
+		a.status as status,
+		a.type as type,
+		a.praise_type as praise_type,
+		a.merchant_id as merchant_id,
+		(SELECT count(*) FROM point_pool where ad_id =fa.ad_id and member_id=#{memberId,jdbcType=VARCHAR}) as count
+    from favorite_ad fa  
+    	left join ad a on fa.ad_id= a.id
+	    <where>
+	    fa.member_id=#{memberId,jdbcType=VARCHAR}
+	    <if test="type == 1" >
+	      and a.type!=4 and a.type!=3
+	      and a.status not in(0,1)
+	    </if>
+	     <if test="type == 2" >
+	      and a.type =3
+	      and a.status !=0
+	    </if>
+    	 ORDER BY field(a.status, 2,3,4,0),fa.gmt_create desc
+    	</where>
+  </select>
+  
+  <resultMap id="FavoriteAdPraiseResultMap" type="com.lawu.eshop.ad.srv.domain.extend.FavoriteAdPraiseWarnView">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="ad_id" jdbcType="BIGINT" property="adId" />
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="member_num" jdbcType="VARCHAR" property="memberNum" />
+  </resultMap>
+  <select resultMap="FavoriteAdPraiseResultMap"  id="selectFavoriteAdPraise"  parameterType="com.lawu.eshop.ad.srv.domain.extend.FavoriteAdExtendDOView">
+     select 
+     	fa.id as id,
+    	fa.member_id as member_id,
+    	fa.member_num as member_num, 
+    	fa.ad_id as ad_id,
+    	a.title as title
+    from favorite_ad fa  
+    	left join ad a on fa.ad_id= a.id
+	      where fa.is_send = 0 and a.type =3 and a.status=1
+	      and  a.begin_time <![CDATA[< #{warnDate} ]]> 
+  </select>
+
+	<select id="getFavoriteAdCount" parameterType="com.lawu.eshop.ad.param.FavoriteAdCountParam" resultType="java.lang.Integer">
+		select
+		count(1)
+		from favorite_ad fa
+		left join ad a on fa.ad_id= a.id
+		<where>
+			fa.member_id=#{memberId}
+			<if test="type == 1" >
+				and a.type!=4 and a.type!=3
+				and a.status not in(0,1)
+			</if>
+			<if test="type == 2" >
+				and a.type =3
+				and a.status !=0
+			</if>
+
+		</where>
+	</select>
+</mapper>

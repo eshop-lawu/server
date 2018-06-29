@@ -1,0 +1,2 @@
+alter table recommend_product_category add column `ordinal` TINYINT(3) UNSIGNED NULL DEFAULT NULL COMMENT '排序，小的排前面' after `category_name`;
+alter table recommend_product_category add column `isvisible` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT '是否可见,0否 1是' after `category_name`;

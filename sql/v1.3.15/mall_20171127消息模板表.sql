@@ -1,0 +1,1 @@
+INSERT INTO `eshop_mall`.`message_template` (`id`, `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ('50', '平台通知', '亲爱的E店用户，您订阅的抢购商品“{9}”将在十分钟后开抢，点击立即查看。', '50', '2017-11-27 10:55:46', '2017-11-27 10:55:49');

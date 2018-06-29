@@ -1,0 +1,7 @@
+CREATE TABLE `fans_merchant` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `merchant_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '商家',
+  `member_id` BIGINT(20) UNSIGNED NOT NULL COMMENT '会员',
+  `gmt_create` DATETIME NOT NULL COMMENT '创建日期',
+  PRIMARY KEY (`id`)
+) COMMENT='商家粉丝';

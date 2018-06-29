@@ -1,0 +1,1 @@
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `gmt_modified`, `gmt_create`) VALUES ('81', '买单单管理', 'payOrder:list', 'payOrder/pay-order.html', '8', '2017-06-29 16:22:48', '2017-06-29 16:22:48');

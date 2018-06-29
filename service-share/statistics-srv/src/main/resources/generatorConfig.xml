@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="E:/maven/repository/mysql/mysql-connector-java/5.1.34/mysql-connector-java-5.1.34.jar"/>
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 分页相关 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <!-- 带上序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- xml文件不追加的插件 -->
+        <plugin type="com.lawu.mybatis.plugin.OverIsMergeablePlugin" />
+        <!-- 忽略所有注释 -->
+        <commentGenerator type="com.lawu.mybatis.generator.EshopCommentGenerator">
+            <!--<property name="suppressAllComments" value="true"/>-->
+            <!-- 忽略日期注释 -->
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.22:3306/eshop_statistics?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root" password="1qazXSW@">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.lawu.eshop.statistics.srv.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="sqlmap" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lawu.eshop.statistics.srv.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--
+        <table tableName="report_withdraw_daily" domainObjectName="ReportWithdrawDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_withdraw_month" domainObjectName="ReportWithdrawMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_user_active_daily" domainObjectName="ReportUserActiveDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_user_active_month" domainObjectName="ReportUserActiveMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_user_active_area_daily" domainObjectName="ReportUserActiveAreaDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="user_visit_record" domainObjectName="UserVisitRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_sales_daily" domainObjectName="ReportSalesDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_sales_month" domainObjectName="ReportSalesMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_user_active_area_month" domainObjectName="ReportUserActiveAreaMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_user_income_expenditure" domainObjectName="ReportUserIncomeExpenditureDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_earnings_daily" domainObjectName="ReportEarningsDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_earnings_month" domainObjectName="ReportEarningsMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_area_point_consume_daily" domainObjectName="ReportAreaPointConsumeDaily">
+        <table tableName="report_area_withdraw_daily" domainObjectName="ReportAreaWithdrawDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_area_point_consume_month" domainObjectName="ReportAreaPointConsumeMonth">
+        <table tableName="report_area_withdraw_month" domainObjectName="ReportAreaWithdrawMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_area_recharge_daily" domainObjectName="ReportAreaRechargeDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="report_area_recharge_month" domainObjectName="ReportAreaRechargeMonthDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        -->
+ 	<table tableName="report_game_point_daily" domainObjectName="ReportGamePointDailyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+     </table>
+    </context>
+</generatorConfiguration>

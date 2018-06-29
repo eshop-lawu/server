@@ -1,0 +1,1 @@
+alter table comment_merchant add column `pay_order_id` bigint(20) DEFAULT NULL COMMENT '买单ID' after content;

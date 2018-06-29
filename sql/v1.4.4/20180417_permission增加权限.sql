@@ -1,0 +1,9 @@
+DELETE FROM `eshop_operator`.`permission` WHERE `id` = 211;
+DELETE FROM `eshop_operator`.`role_permission` WHERE `permission_id` = 211;
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('238', '商品管理', 'productManage', '', '0', '5', '2018-04-16 13:22:48', '2018-04-16 13:22:48');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('239', '商品分类管理', 'productCategory:list', 'product/productCategoryList.html', '238', '1', '2018-04-16 15:30:25', '2018-04-16 15:30:27');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('240', '自定义信息管理', 'customSpec:list', 'product/productCustomSpec.html', '238', '999', '2018-04-16 18:09:21', '2018-04-16 18:09:21');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('241', '商品品牌管理', 'productBrand:list', 'product/productBrand.html', '238', '2', '2018-04-17 13:09:21', '2018-04-17 13:09:21');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('242', '商品规格管理', 'productSpec:list', 'product/productSpec.html', '238', '3', '2018-04-17 13:09:21', '2018-04-17 13:09:21');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('243', '商品规格项管理', 'productSpecOption:list', 'product/productSpecOption.html', '238', '4', '2018-04-17 13:09:21', '2018-04-17 13:09:21');
+

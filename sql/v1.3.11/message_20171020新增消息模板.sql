@@ -1,0 +1,1 @@
+INSERT INTO `eshop_mall`.`message_template` (`id`, `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ('49', '收益通知', '小E给您发了{10}元现金红包，欢迎您的加入！点击查看红包详情', '49', NOW(), NOW());

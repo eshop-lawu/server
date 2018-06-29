@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.game.srv.mapper.extend.UserStarRecordDOMapperExtend" >
+    <update id="addStarRecord"   parameterType="com.lawu.eshop.game.param.UserStartParam">
+      update user_star_record set month_star_count = month_star_count + #{starCount},gmt_modified = #{gmtModified} where id = #{id}
+    </update>
+
+    <update id="reduceStarMonthRecord"   parameterType="com.lawu.eshop.game.param.UserStartParam">
+        UPDATE user_star_record SET month_star_count = (CASE WHEN month_star_count &lt;= #{starCount} THEN 0 ELSE  month_star_count-#{starCount} END) ,gmt_modified = #{gmtModified} where  id = #{id}
+    </update>
+
+    <select id="getStarRankList"  parameterType='com.lawu.eshop.game.param.RankListParam' resultType="com.lawu.eshop.game.srv.domain.extend.StarRankListDOView">
+        SELECT account as account,month_star_count as monthStarCount from user_star_record where gmt_report = #{reportDate} ORDER BY month_star_count desc,gmt_modified asc  LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="getStarRankListCount"  parameterType='com.lawu.eshop.game.param.RankListParam' resultType="java.lang.Integer">
+       SELECT count(1) from user_star_record where gmt_report = #{reportDate}
+    </select>
+
+</mapper>

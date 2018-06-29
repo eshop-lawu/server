@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.SeckillActivityProductDOExtendMapper">
+	<update id="increaseAttentionCount" parameterType="java.lang.Long">
+		UPDATE seckill_activity_product SET attention_count = attention_count + 1 WHERE id=#{id,jdbcType=BIGINT}
+	</update>
+    
+    <update id="editTotalInventory" parameterType="com.lawu.eshop.product.srv.domain.extend.ProductNumsView">
+        update seckill_activity_product set
+        <if test='flag == "M"'>
+            left_count = left_count - #{num,jdbcType=INTEGER},
+        </if>
+        <if test='flag == "A"'>
+            left_count = left_count + #{num,jdbcType=INTEGER},
+        </if>
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+        where id = #{productId,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,1 @@
+ALTER TABLE `transaction_detail` MODIFY COLUMN `amount`  decimal(20,6) UNSIGNED NOT NULL DEFAULT 0.000000 COMMENT '金额' AFTER `transaction_account_type`;

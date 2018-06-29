@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lawu.eshop.ad.srv.mapper.extend.UserTakedRedpacketBOMapperExtend">
+	
+	<!-- 查询最大的金额 start 一 -->
+	<resultMap type="com.lawu.eshop.ad.srv.domain.extend.UserRedpacketMaxMoney" id="BaseMaxMoneyQuery">
+		<result column="maxMoney" jdbcType="DECIMAL" property="maxMoney"/>
+	</resultMap>
+	<select id="getMaxMoney" parameterType="java.lang.Long" resultMap="BaseMaxMoneyQuery">
+		select max(money) as maxMoney from user_taked_red_packet where
+		user_red_pack_id=#{userRedId,jdbcType=BIGINT}
+	</select>
+	<!-- 查询最大的金额 end 一 -->
+	
+	<select id="getSumMoney" parameterType="java.lang.Long" resultMap="BaseMaxMoneyQuery">
+		select sum(money) as maxMoney from user_taked_red_packet where
+		user_red_pack_id=#{userRedId,jdbcType=BIGINT}
+	</select>
+
+</mapper>

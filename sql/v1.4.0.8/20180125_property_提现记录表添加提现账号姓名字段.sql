@@ -1,0 +1,2 @@
+alter table eshop_property.withdraw_cash add column `account_name` varchar(15) DEFAULT NULL COMMENT '账户' after `business_bank_account_id`;
+alter table eshop_property.withdraw_cash add column `account_number` varchar(26) DEFAULT NULL COMMENT '账号' after `account_name`;

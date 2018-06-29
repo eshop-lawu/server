@@ -1,0 +1,1 @@
+alter table `bank_account`  modify  column  `sub_branch_name` varchar(100) NOT NULL COMMENT '支行名称';

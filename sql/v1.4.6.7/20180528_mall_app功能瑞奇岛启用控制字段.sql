@@ -1,0 +1,1 @@
+alter table `eshop_mall`.`app_function_manage` add column  is_enable_rich tinyint(1) DEFAULT '1' COMMENT '是否启用瑞奇岛'  after is_enable_love;

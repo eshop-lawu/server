@@ -1,0 +1,1 @@
+ALTER TABLE `discount_package` MODIFY COLUMN `original_price` decimal(15,2) UNSIGNED NOT NULL COMMENT '原价' AFTER `price`;

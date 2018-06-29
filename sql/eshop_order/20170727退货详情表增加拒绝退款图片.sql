@@ -1,0 +1,1 @@
+ALTER TABLE shopping_refund_detail ADD COLUMN `refuse_images` varchar(500)   DEFAULT NULL COMMENT '拒绝退款图片 ' AFTER `voucher_picture`;

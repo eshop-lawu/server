@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.MerchantStoreDOMapperExtend">
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.user.srv.domain.extend.MerchantPushView">
+        <result column="num" property="num" jdbcType="VARCHAR"/>
+        <result column="gt_cid" property="gtCid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <update id="addMerchantStoreBuyNums" parameterType="java.lang.Long">
+     UPDATE merchant_store
+        SET buy_numbers = buy_numbers + 1
+        WHERE
+	merchant_id = #{merchantId}
+    </update>
+    
+    <update id="updateMerchantStoreBuyNums">
+      UPDATE merchant_store
+      SET buy_numbers = #{buyNums}
+      WHERE merchant_id = #{merchantId} AND buy_numbers &lt; #{buyNums}
+    </update>
+
+    <update id="addMerchantStoreCommentsCount">
+        UPDATE merchant_store
+        SET comments_count = #{commentsCount}
+        WHERE
+        merchant_id = #{merchantId} AND comments_count &lt; #{commentsCount}
+    </update>
+
+    <select id="selectPushInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        m.num,
+        m.gt_cid
+        FROM
+        merchant AS m
+        INNER JOIN merchant_store AS s ON m.id = s.merchant_id
+        WHERE
+        m.`status` = 1
+        AND m.gt_cid IS NOT NULL
+        <if test="area != 'all'">
+            AND s.region_path like CONCAT(#{area},'%' )
+        </if>
+    </select>
+
+    <select id="listMerchantStore" resultType="com.lawu.eshop.user.srv.domain.MerchantStoreDO" parameterType="com.lawu.eshop.user.param.ListMerchantStoreParam">
+        SELECT ms.id,ms.merchant_id as merchantId,ms.name,ms.region_path as regionPath,ms.region_name as regionName,ms.longitude,ms.latitude,
+        ms.industry_path as industryPath,ms.industry_name as industryName,ms.favorite_number as favoriteNumber,ms.average_consume_amount as averageConsumeAmount,
+        ms.average_score as averageScore
+        FROM merchant_store ms INNER JOIN merchant_store_profile msp on ms.merchant_id = msp.merchant_id
+        INNER JOIN  merchant m on ms.merchant_id = m.id
+        WHERE ms.status = #{status} and msp.manage_type = #{manageType} and m.status = 1 and m.is_freeze = 0
+        limit #{offset} , #{pageSize}
+    </select>
+
+    <select id="listInvalidMerchantStore" resultType="com.lawu.eshop.user.srv.domain.MerchantStoreDO" parameterType="com.lawu.eshop.user.param.ListMerchantStoreParam">
+        SELECT ms.id
+        FROM merchant_store ms INNER JOIN merchant_store_profile msp on ms.merchant_id = msp.merchant_id
+        INNER JOIN merchant m on ms.merchant_id = m.id
+        WHERE (ms.status != #{status} or msp.manage_type != #{manageType} or m.is_freeze = 1)
+        <if test="typeEnum.name == 'PART'">
+            and ms.gmt_modified >= date_sub(now(), interval 2 hour)
+        </if>
+        limit #{offset} , #{pageSize}
+    </select>
+
+    <!-- 查询门店名称和门店图片  买单-->
+    <select id="getPayOrderStoreInfo" resultType="com.lawu.eshop.user.srv.domain.extend.PayOrderStoreInfoView">
+        SELECT
+        s.name,
+        i.path,
+        s.merchant_id as merchantId
+        FROM
+        merchant_store AS s
+        LEFT JOIN merchant_store_image AS i ON s.id = i.merchant_store_id
+        WHERE
+        s.status = 1
+        AND i.type = 1
+        AND s.merchant_id IN
+        <foreach collection="list" item="merchantId" open="(" close=")" separator=",">
+            #{merchantId}
+        </foreach>
+    </select>
+
+    <select id="getMerchantStoreByIds" resultType="com.lawu.eshop.user.srv.domain.extend.StoreSolrInfoDOView">
+        SELECT
+        id as merchantStoreId,
+        merchant_id as merchantId,
+        industry_path as industryPath,
+        industry_name as industryName
+        FROM
+        merchant_store
+        where id in
+        <foreach collection="list" item="merchantStoreId" open="(" close=")" separator=",">
+            #{merchantStoreId}
+        </foreach>
+    </select>
+
+    <select id="getStoreDetailById" resultType="com.lawu.eshop.user.srv.domain.extend.StoreDetailDOView" parameterType="java.lang.Long">
+        SELECT
+        s.merchant_id AS merchantId,
+        s.name AS name,
+        s.intro,
+        s.principal_mobile AS principalMobile,
+        s.address AS address,
+        s.buy_numbers AS buyNumbers,
+        s.average_consume_amount AS averageConsumeAmount,
+        s.average_score AS averageScore,
+        s.favorite_number AS favoriteNumber,
+        s.feedback_rate AS feedbackRate,
+        s.region_name as regionName,
+        s.region_path as regionPath,
+        s.longitude,
+        s.latitude,
+        s.industry_path as industryPath,
+        i.type AS type,
+        i.path AS path,
+        m.num AS userNum
+        FROM
+        merchant_store AS s
+        INNER JOIN merchant AS m ON s.merchant_id = m.id
+        INNER JOIN merchant_store_image AS i ON s.id = i.merchant_store_id
+        WHERE
+        s.id = #{id}
+        AND i. STATUS = 1
+    </select>
+
+    <select id="getShoppingStoreInfo" resultType="com.lawu.eshop.user.srv.domain.extend.ShoppingStoreInfoDOView"
+            parameterType="java.lang.Long">
+           select
+            s.merchant_id as merchantId,
+            s.name as name,
+            i.path
+        from
+            merchant_store as s
+        inner join merchant_store_image as i on s.id = i.merchant_store_id
+        where
+            s.id = #{id}
+        and i.type = 3
+        and i.status = 1
+    </select>
+    
+     <!-- 广告模块查询商家信息  @author zhangrc @date 2017/06/15 -->
+    <resultMap id="BaseResultAdMerchantMap" type="com.lawu.eshop.user.srv.domain.extend.MerchantAdInfoView">
+        <id column="id" property="merchantStoreId" jdbcType="BIGINT" />
+        <result column="merchant_id" property="merchantId" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <result column="manage_type" property="manageType" jdbcType="TINYINT" />
+    </resultMap>
+    <select id="getAdMerchantStoreByIds" resultMap="BaseResultAdMerchantMap">
+        SELECT ms.id,
+			   ms.name,
+			   msi.path,
+			   msp.manage_type,
+			   m.id as merchant_id
+		from   merchant m
+			LEFT JOIN merchant_store  ms on m.id=ms.merchant_id and  ms.`status`=1
+			LEFT JOIN  merchant_store_image msi on ms.id=msi.merchant_store_id and msi.type=3 and msi.`status`=1
+			LEFT JOIN  merchant_store_profile msp on m.id=msp.merchant_id
+		WHERE m.id in
+        <foreach collection="list" item="merchantId" open="(" close=")" separator=",">
+            #{merchantId}
+        </foreach>
+    </select>
+
+    <select id="getPayOrderDetailStoreInfo" resultType="com.lawu.eshop.user.srv.domain.extend.PayOrderStoreInfoView" parameterType="java.lang.Long">
+        SELECT
+        s.name,
+        i.path,
+        s.merchant_id as merchantId,
+        s.address,
+        s.principal_mobile as principalMobile,
+        s.id as merchantStoreId,
+        s.region_name as regionName,
+        m.num as userNum
+        FROM
+        merchant_store AS s
+        INNER JOIN merchant AS m ON s.merchant_id = m.id
+        LEFT JOIN merchant_store_image AS i ON s.id = i.merchant_store_id
+        WHERE
+        s.status = 1
+        AND i.type = 1
+        AND i.status = 1
+        AND s.merchant_id =  #{merchantId}
+    </select>
+
+    <select id="getPayOrderMerchantInfo" resultType="com.lawu.eshop.user.srv.domain.extend.PayOrderStoreInfoView"
+            parameterType="java.lang.Long">
+        SELECT
+        s.name,
+        m.account
+        FROM
+        merchant AS m
+        LEFT JOIN merchant_store AS s ON m.id = s.merchant_id
+        WHERE
+        m.id =  #{merchantId}
+    </select>
+
+    <select id="listNewMerchant" resultType="com.lawu.eshop.user.srv.domain.extend.NewMerchantStoreDOView" parameterType="java.lang.String">
+        select m.id as merchantId,ms.id as merchantStoreId,ms.name,ms.industry_name as industryName,ms.region_name as regionName,ms.region_path as regionPath,ms.address,msi.path as storePic
+        from merchant m inner join merchant_store ms on m.id = ms.merchant_id
+        inner join merchant_store_profile msp on m.id = msp.merchant_id
+        inner join merchant_store_image msi on ms.id = msi.merchant_store_id
+        where m.status = 1 and m.is_freeze = 0 and ms.status = 1 and msp.manage_type = 2 and msi.status = 1 and msi.type = 1
+        and ms.region_path like CONCAT(#{regionPath},'%' )
+        order by ms.id desc limit 50
+    </select>
+
+    <select id="listRecommendFoodConsume" resultType="com.lawu.eshop.user.srv.domain.extend.RecommendFoodDOview" parameterType="java.util.Map">
+        select m.id as merchantId,ms.id as merchantStoreId,ms.name,ms.industry_name as industryName,ms.region_name as regionName,ms.address,
+        ms.longitude,ms.latitude,ms.average_score as averageScore,ms.average_consume_amount as averageConsumeAmount,ms.buy_numbers as buyNumbers,
+        ms.comments_count as commentsCount,ms.region_path as regionPath,msi.path as storePic
+        from merchant m inner join merchant_store ms on m.id = ms.merchant_id
+        inner join merchant_store_profile msp on m.id = msp.merchant_id
+        inner join merchant_store_image msi on ms.id = msi.merchant_store_id
+        where m.status = 1 and m.is_freeze = 0 and ms.status = 1 and msp.manage_type = 2 and msi.status = 1 and msi.type = 1
+        and ms.industry_path like CONCAT(#{industryId},'%' ) and ms.region_path like CONCAT(#{regionPath},'%' )
+        order by ms.buy_numbers desc limit 5
+    </select>
+
+    <select id="listRecommendFoodComment" resultType="com.lawu.eshop.user.srv.domain.extend.RecommendFoodDOview" parameterType="java.util.Map">
+        select m.id as merchantId,ms.id as merchantStoreId,ms.name,ms.industry_name as industryName,ms.region_name as regionName,ms.address,
+        ms.longitude,ms.latitude,ms.average_score as averageScore,ms.average_consume_amount as averageConsumeAmount,ms.buy_numbers as buyNumbers,
+        ms.comments_count as commentsCount,ms.region_path as regionPath,msi.path as storePic
+        from merchant m inner join merchant_store ms on m.id = ms.merchant_id
+        inner join merchant_store_profile msp on m.id = msp.merchant_id
+        inner join merchant_store_image msi on ms.id = msi.merchant_store_id
+        where m.status = 1 and m.is_freeze = 0 and ms.status = 1 and msp.manage_type = 2 and msi.status = 1 and msi.type = 1
+        and ms.industry_path like CONCAT(#{industryId},'%' ) and ms.region_path like CONCAT(#{regionPath},'%' )
+        order by ms.average_score * ms.comments_count desc limit 5
+    </select>
+
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.ad.srv.mapper.extend.AdPlatformDOMapperExtend">
+  
+  <select id="getAdPlatformByTypePosition" parameterType="com.lawu.eshop.ad.param.AdPlatformExtendParam" resultType="com.lawu.eshop.ad.srv.domain.extend.AdPlatformDOView">
+    select product_id as productId,title,media_url as mediaUrl ,link_url as linkUrl from ad_platform
+    where
+    position = #{position} and status = #{status}
+     <if test="type != null">
+      and  type = #{type}
+     </if>
+    order by priority asc
+  </select>
+  
+   <resultMap id="BaseResultAdTwoMap" type="com.lawu.eshop.ad.srv.domain.extend.AdPlatformVideoView">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="ad_id" jdbcType="BIGINT" property="adId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="video_img_url" jdbcType="VARCHAR" property="videoImgUrl" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="media_url" jdbcType="VARCHAR" property="mediaUrl" />
+    <result column="position" jdbcType="TINYINT" property="position" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+  </resultMap>
+  <!--广告位二  -->
+  <select id="selAdPlatformPositionAd" resultMap="BaseResultAdTwoMap" parameterType="com.lawu.eshop.ad.srv.domain.extend.SelectAdPlatformPositionExample">
+   SELECT
+		ap.id AS id,
+		ap.ad_id AS ad_id,
+		ap.position AS position,
+		a.title AS title,
+		a.content AS content,
+		a.video_img_url as video_img_url ,
+		a.merchant_store_name as name,
+		a.logo_url as logo_url,
+		case when (ap.media_url is null or ap.media_url = '' ) then a.media_url
+		else ap.media_url end media_url
+	FROM
+		ad_platform ap
+	LEFT JOIN ad a ON ap.ad_id = a.id
+	WHERE
+		ap.type = 4 and ap.status=1
+	AND ap.ad_id in (
+	 		SELECT id FROM ad
+				WHERE  status = 2 AND
+				(
+				    ( put_way = 1 AND areas IS NULL )
+				    <if test="latitude != null and longitude != null">
+				    OR
+				    ( 
+				      put_way = 3
+				      AND  merchant_latitude &gt; #{latitude} - 1 AND  merchant_latitude &lt; #{latitude} + 1 AND merchant_longitude &gt;  #{longitude} - 1 AND merchant_longitude &lt; #{longitude} + 1 
+				      AND (#{radius} * 2 * ASIN(SQRT(POW(SIN((#{latitude} - merchant_latitude) * PI() / 180 / 2 ), 2) + COS(#{latitude} * PI() / 180) * COS(merchant_latitude * PI() / 180 ) * POW(SIN((#{longitude} - merchant_longitude) * PI() / 180 / 2), 2)))) &gt; radius
+				    )
+				    </if>
+				    <if test="merchantIds != null and merchantIds.size > 0">
+				    OR 
+				    ( put_way = 2 AND merchant_id IN <foreach collection="merchantIds" item="merchantId" open="(" close=")" separator="," >#{merchantId}</foreach> )
+					</if>
+					<if test="areas != null and areas.size > 0">
+					OR
+				   <!--  ( put_way = 1 AND areas IN <foreach collection="areas" item="area" open="(" close=")" separator="," >#{area}</foreach> )
+				     -->
+				    	 ( put_way = 1 AND <foreach collection="areas" item="area" open="(" close=")" separator="or" >find_in_set(#{area},areas)</foreach>)
+				    </if>
+				)
+	 )
+	ORDER BY ap.gmt_create desc
+  </select>
+  
+   <update id="updateByPrimaryKeySelective" parameterType="com.lawu.eshop.ad.srv.domain.AdPlatformDO">
+
+    update ad_platform
+    <set>
+        product_id = #{productId,jdbcType=BIGINT},
+        ad_id = #{adId,jdbcType=BIGINT},
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="mediaUrl != null">
+        media_url = #{mediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null">
+        link_url = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+        merchant_store_id = #{merchantStoreId,jdbcType=BIGINT},
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=TINYINT},
+      </if>
+      <if test="regionPath != null">
+        region_path = #{regionPath,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null">
+        region_name = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

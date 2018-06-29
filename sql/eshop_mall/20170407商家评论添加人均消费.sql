@@ -1,0 +1,1 @@
+alter table comment_merchant add avg_spend decimal(10,2) not Null COMMENT '人均消费' after is_anonymous;

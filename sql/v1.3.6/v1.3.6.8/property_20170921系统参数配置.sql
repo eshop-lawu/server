@@ -1,0 +1,1 @@
+insert into property values(37,'member_fans_point','0.8','会员成为粉丝获得积分比例',now(),null);

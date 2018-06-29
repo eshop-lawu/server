@@ -1,0 +1,1 @@
+alter table product add column `average_daily_sales` DECIMAL(10,2) unsigned DEFAULT 0 COMMENT '平均日销售' after `status`;

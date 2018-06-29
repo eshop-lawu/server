@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.ProductSpecDOMapperExtend">
+
+    <select id="getOperatorProductSpecList" resultType="com.lawu.eshop.product.srv.domain.extend.OperatorProductSpecDOView"
+            parameterType="com.lawu.eshop.product.param.OperatorProductSpecParam">
+        SELECT
+        b.id as id,
+        b.spec_name as specName,
+        b.ordinal as ordinal,
+        b.product_category_id as productCategoryId,
+        c.name as categoryName,
+        b.gmt_create as gmtCreate
+        FROM
+        product_spec AS b
+        INNER JOIN product_category AS c ON b.product_category_id = c.id
+        WHERE b.status = 1
+        <if test="productCategoryId != null">
+            AND b.product_category_id = #{productCategoryId}
+        </if>
+        <if test="specName != null and  specName != ''">
+            AND b.spec_name = #{specName}
+        </if>
+        ORDER BY c.id asc, b.ordinal asc
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="getOperatorProductSpecListCount" resultType="java.lang.Integer"
+            parameterType="com.lawu.eshop.product.param.OperatorProductSpecParam">
+        SELECT
+        count(b.id)
+        FROM
+        product_spec AS b
+        INNER JOIN product_category AS c ON b.product_category_id = c.id
+        WHERE b.status = 1
+        <if test="productCategoryId != null">
+            AND b.product_category_id = #{productCategoryId}
+        </if>
+        <if test="specName != null  and  specName != ''">
+            AND  b.spec_name = #{specName}
+        </if>
+    </select>
+
+    <select id="getOperatorSpecOptionList" resultType="com.lawu.eshop.product.srv.domain.extend.OperatorProductSpecOptionDOView"
+            parameterType="com.lawu.eshop.product.param.OperatorSpecOptionListParam">
+        SELECT
+        b.id as id,
+        b.option_name as optionName,
+        b.ordinal as ordinal,
+        b.icon_url as iconUrl,
+        b.product_spec_id as productSpecId,
+        c.spec_name as specName,
+        b.gmt_create as gmtCreate
+        FROM
+        product_spec_option AS b
+        INNER JOIN product_spec AS c ON b.product_spec_id = c.id
+        WHERE b.status = 1
+        <if test="productSpecId != null">
+            AND b.product_spec_id = #{productSpecId}
+        </if>
+        <if test="optionName != null and  optionName != ''">
+            AND b.option_name = #{optionName}
+        </if>
+        ORDER BY c.id asc, b.ordinal asc
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="getOperatorSpecOptionListCount" resultType="java.lang.Integer"
+            parameterType="com.lawu.eshop.product.param.OperatorSpecOptionListParam">
+        SELECT
+        count(b.id)
+        FROM
+        product_spec_option AS b
+        INNER JOIN product_spec AS c ON b.product_spec_id = c.id
+        WHERE b.status = 1
+        <if test="productSpecId != null">
+            AND b.product_spec_id = #{productSpecId}
+        </if>
+        <if test="optionName != null and  optionName != ''">
+            AND b.option_name = #{optionName}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,2 @@
+UPDATE `eshop_mall`.`message_template` SET `title` = '商家同意退款', `content` = '亲爱的E店用户，商家已同意您的退款申请，退款金额为{21}元，实际退款{28}元+{29}积分。点击查看退款进度。退款编号：{8}', `type` = 12, `gmt_modified` = '2017-05-06 16:19:04', `gmt_create` = '2017-05-06 16:19:07' WHERE `id` = 12;
+UPDATE `eshop_mall`.`message_template` SET `title` = '退款成功', `content` = '亲爱的E店用户，您已成功退款，退款金额为{21}元，实际退款{28}元+{29}积分。', `type` = 14, `gmt_modified` = '2017-05-06 16:19:04', `gmt_create` = '2017-05-06 16:19:07' WHERE `id` = 14;

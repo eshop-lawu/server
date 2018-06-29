@@ -1,0 +1,1 @@
+alter table `eshop_product`.`product` add column `remark` VARCHAR(100) NULL DEFAULT NULL COMMENT '备注' after `max_price`;

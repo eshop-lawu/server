@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.FavoriteMerchantDOMapperExtend" >
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.user.srv.domain.extend.FavoriteMerchantDOView" >
+  	<result column="merchant_id" property="merchantId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="industry_name" property="industryName" jdbcType="VARCHAR" />
+    <result column="average_score" property="feedbackRate" jdbcType="DECIMAL" />
+    <result column="merchant_store_id" property="merchantStoreId" jdbcType="BIGINT" />
+    <result column="count_fs" jdbcType="INTEGER" property="countFs" />
+  </resultMap>
+
+  <resultMap id="BaseQueryResultMap" type="com.lawu.eshop.user.srv.domain.extend.FavoriteMerchantDOView" >
+  	<result column="merchant_id" property="merchantId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="industry_name" property="industryName" jdbcType="VARCHAR" />
+    <result column="average_score" property="feedbackRate" jdbcType="DECIMAL" />
+    <result column="merchant_store_id" property="merchantStoreId" jdbcType="BIGINT" />
+    <result column="count_fs" jdbcType="INTEGER" property="countFs" />
+    <result column="gmt_create" jdbcType="DATE" property="gmtCreate" />
+  </resultMap>
+  
+  <select resultMap="BaseResultMap" parameterType="com.lawu.eshop.user.srv.domain.extend.FavoriteMerchantDOView" id="selectFavoriteMerchantByRowbounds" >
+    SELECT FM.id,
+    	   FM.merchant_id,
+    	   MS.`name`,
+    	   MS.industry_name,
+           MS.latitude ,
+           MS.longitude,
+           MS.average_score,
+           MS.id as merchant_store_id,
+           (SELECT count(*) FROM fans_merchant where merchant_id=FM.merchant_id and `status`=1) as count_fs
+       FROM favorite_merchant FM 
+	LEFT JOIN merchant_store MS ON FM.merchant_id=MS.merchant_id  
+	WHERE  FM.member_id=#{memberId,jdbcType=BIGINT} AND FM.manage_type=#{type,jdbcType=TINYINT}
+	ORDER BY  MS.status asc , FM.gmt_create desc 
+  </select>
+
+    <select resultMap="BaseQueryResultMap" parameterType="com.lawu.eshop.user.srv.domain.extend.FavoriteMerchantDOView" id="selectFansMerchantByRowbounds" >
+        SELECT FM.id,
+        FM.merchant_id,
+        MS.`name`,
+        MS.industry_name,
+        MS.latitude ,
+        MS.longitude,
+        MS.average_score,
+        MS.id as merchant_store_id,
+        (SELECT count(*) FROM fans_merchant where merchant_id=FM.merchant_id and `status`=1) as count_fs,
+        FM.gmt_create
+        FROM fans_merchant FM
+        LEFT JOIN merchant_store MS ON FM.merchant_id=MS.merchant_id
+        WHERE  FM.member_id=#{memberId,jdbcType=BIGINT}
+        ORDER BY  MS.status asc , FM.gmt_create desc
+    </select>
+</mapper>

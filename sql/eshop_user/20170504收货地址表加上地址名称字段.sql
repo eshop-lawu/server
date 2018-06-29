@@ -1,0 +1,1 @@
+ALTER TABLE `address` ADD COLUMN `region_name`  varchar(75) NOT NULL COMMENT '收货地址名称' AFTER `region_path`;

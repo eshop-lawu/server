@@ -1,0 +1,1 @@
+update message_template set content='亲爱的E店商家，您的{17}{13}因{18}未通过审核，请重新提交' where id=24;

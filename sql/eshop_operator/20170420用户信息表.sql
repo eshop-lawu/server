@@ -1,0 +1,1 @@
+ALTER TABLE user ADD COLUMN `status` tinyint(2) DEFAULT NULL COMMENT '状态 (0--无效，1--有效)' AFTER `password`;

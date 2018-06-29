@@ -1,0 +1,1 @@
+alter table eshop_property.transaction_detail add column `transaction_desc` varchar(150) DEFAULT '' COMMENT '交易说明' after `biz_num`;

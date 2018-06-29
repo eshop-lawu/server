@@ -1,0 +1,2 @@
+alter table fans_invite_detail add column `age` VARCHAR(10) NOT NULL DEFAULT '' COMMENT '年龄区间' after `region_name`;
+alter table fans_invite_detail add column `sex` TINYINT(2) UNSIGNED NULL DEFAULT NULL COMMENT '性别 (0--男，2--女，1--全部)' after `region_name`;

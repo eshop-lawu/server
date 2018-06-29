@@ -1,0 +1,25 @@
+/*20170415 建表*/
+CREATE TABLE `shopping_refund_detail` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `shopping_order_item_id` bigint(20) unsigned NOT NULL COMMENT '购物订单项id',
+  `type` tinyint(2) unsigned NOT NULL COMMENT '退款类型(0-退款|1-退货退款)',
+  `reason` varchar(100) NOT NULL COMMENT '退货原因',
+  `amount` decimal(10,2) NOT NULL COMMENT '退款金额',
+  `consignee_name` varchar(20) DEFAULT NULL COMMENT '收货人姓名',
+  `consignee_address` varchar(100) DEFAULT NULL COMMENT '收货人地址',
+  `consignee_mobile` varchar(15) DEFAULT NULL COMMENT '收货人手机号码',
+  `express_company_id` int(11) DEFAULT NULL COMMENT '快递公司id',
+  `express_company_code` varchar(10) DEFAULT NULL COMMENT '快递公司编码',
+  `express_company_name` varchar(25) DEFAULT NULL COMMENT '快递公司名称',
+  `waybill_num` varchar(20) DEFAULT NULL COMMENT '物流编号',
+  `status` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '状态(0-正常|1-撤销退款申请)',
+  `is_agree` tinyint(1) unsigned DEFAULT NULL COMMENT '商家是否同意退货申请',
+  `gmt_refund` datetime DEFAULT NULL COMMENT '退款时间',
+  `gmt_confirmed` datetime DEFAULT NULL COMMENT '商家确认时间',
+  `gmt_fill` datetime DEFAULT NULL COMMENT '商家填写退货地址',
+  `gmt_submit` datetime DEFAULT NULL COMMENT '买家提交退货物流时间',
+  `gmt_intervention` datetime DEFAULT NULL COMMENT '平台介入时间',
+  `gmt_create` datetime NOT NULL COMMENT '创建时间',
+  `gmt_modified` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='退货详情';

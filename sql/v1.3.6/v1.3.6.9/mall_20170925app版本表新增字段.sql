@@ -1,0 +1,1 @@
+alter table `app_version` add column  `platform` tinyint(2)  NOT NULL COMMENT '1-ios 2-安卓' after update_desc;

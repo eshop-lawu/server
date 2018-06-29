@@ -1,0 +1,1 @@
+alter table `industry_type` add column `type` TINYINT(2) UNSIGNED NOT NULL DEFAULT '2' COMMENT '1--普通店铺行业,2--实体店铺行业' after `status`;

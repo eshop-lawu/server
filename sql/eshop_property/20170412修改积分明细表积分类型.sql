@@ -1,0 +1,1 @@
+alter table point_detail modify column `point_num` varchar(25) NOT NULL DEFAULT '' COMMENT '积分编号';

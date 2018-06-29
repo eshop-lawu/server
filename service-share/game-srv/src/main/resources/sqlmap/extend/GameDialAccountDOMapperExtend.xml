@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.game.srv.mapper.extend.GameDialAccountDOMapperExtend">
+
+    <update id="updateFreeCount" parameterType="java.lang.String">
+        update game_dial_account set free_count = free_count - 1,gmt_modified = sysdate()
+        where user_num = #{userNum,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

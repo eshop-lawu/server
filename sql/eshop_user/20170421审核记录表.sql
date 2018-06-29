@@ -1,0 +1,1 @@
+ALTER TABLE `merchant_store_audit` ADD COLUMN `type`  tinyint(2) DEFAULT NULL COMMENT '审核类型1：修改资料2：申请实体店' AFTER `status`;

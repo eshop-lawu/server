@@ -1,0 +1,1 @@
+insert into permission values(106,'用户/商家详情','account:detail','',101,sysdate(),sysdate());

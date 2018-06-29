@@ -1,0 +1,1 @@
+alter table freeze add column `item_id` bigint(20) DEFAULT NULL COMMENT '业务表子项主键' AFTER `biz_id`;

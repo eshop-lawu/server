@@ -1,0 +1,1 @@
+alter table `property_info`  modify  column  `pay_password` char(57)   COMMENT '支付密码';

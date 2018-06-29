@@ -1,0 +1,1 @@
+alter table `ad` add column `client_type` tinyint(2) NOT NULL COMMENT '支付客户端类型' after `pay_type`;

@@ -1,0 +1,1 @@
+alter table property add column `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间';

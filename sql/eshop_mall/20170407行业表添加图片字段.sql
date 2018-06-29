@@ -1,0 +1,1 @@
+alter table industry_type add image_url varchar(120) NOT NULL DEFAULT '' COMMENT '图片路径'  after name;

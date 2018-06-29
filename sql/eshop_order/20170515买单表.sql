@@ -1,0 +1,1 @@
+ALTER TABLE pay_order ADD COLUMN `order_status` tinyint(1) NOT NULL  DEFAULT '1' COMMENT '状态(0删除1正常) ' AFTER `status`;

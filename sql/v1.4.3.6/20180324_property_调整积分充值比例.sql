@@ -1,0 +1,1 @@
+update eshop_property.property set value='100' where name in('m_balance_pay_point','m_third_pay_point');

@@ -1,0 +1,4 @@
+UPDATE report_user_active_daily AS a, report_user_active_daily AS b SET a.member_count = b.merchant_count, a.merchant_count = b.member_count WHERE  a.id = b.id;
+UPDATE report_user_active_month AS a, report_user_active_month AS b SET a.member_count = b.merchant_count, a.merchant_count = b.member_count WHERE  a.id = b.id;
+UPDATE report_user_active_area_daily AS a, report_user_active_area_daily AS b SET a.member_count = b.merchant_count, a.merchant_count = b.member_count WHERE  a.id = b.id;
+UPDATE report_user_active_area_month AS a, report_user_active_area_month AS b SET a.member_count = b.merchant_count, a.merchant_count = b.member_count WHERE  a.id = b.id;

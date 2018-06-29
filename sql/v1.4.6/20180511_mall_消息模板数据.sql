@@ -1,0 +1,2 @@
+INSERT INTO `eshop_mall`.`message_template` (`title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ('平台通知', '亲爱的{0}，您已收到由平台充值的积分{25}分，当前积分为{5}分。', '57', NOW(), NOW());
+INSERT INTO `eshop_mall`.`message_template` (`title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES ('平台通知', '亲爱的{0}，您已收到由平台充值的余额{4}元，当前余额为{3}元。', '56', NOW(), NOW());

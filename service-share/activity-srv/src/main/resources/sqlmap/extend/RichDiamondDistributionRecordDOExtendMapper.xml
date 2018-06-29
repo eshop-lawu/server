@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.activity.srv.mapper.extend.RichDiamondDistributionRecordDOExtendMapper">
+    
+    <!-- 更新分配E钻的居民数量以及分配的E钻数量 -->
+    <update id="updateAssignedQuantity" parameterType="com.lawu.eshop.activity.srv.domain.extend.UpdateAssignedQuantityParam">
+        UPDATE rich_diamond_distribution_record 
+        SET allocated_residents = allocated_residents + #{allocatedResidents,jdbcType=BIGINT}, 
+        real_ordinary_allocations = real_ordinary_allocations + #{realOrdinaryAllocations,jdbcType=DECIMAL},
+        merchant_real_ordinary_allocations = merchant_real_ordinary_allocations + #{merchantRealOrdinaryAllocations,jdbcType=DECIMAL},
+        gmt_modified = NOW() 
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <!-- 更新分配幸运钻的居民数量以及分配的幸运钻数量 -->
+    <update id="updateLuckyAssignedQuantity" parameterType="com.lawu.eshop.activity.srv.domain.extend.UpdateLuckyAssignedQuantityParam">
+        UPDATE rich_diamond_distribution_record
+        SET allocated_lucky_residents = allocated_lucky_residents + #{allocatedLuckyResidents,jdbcType=BIGINT},
+        real_luck_allocations = real_luck_allocations + #{realLuckyAllocations,jdbcType=DECIMAL},
+        merchant_real_luck_allocations = merchant_real_luck_allocations + #{merchantRealLuckyAllocations,jdbcType=DECIMAL},
+        gmt_modified = NOW() 
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    
+</mapper>

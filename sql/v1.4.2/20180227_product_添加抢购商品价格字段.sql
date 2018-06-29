@@ -1,0 +1,1 @@
+alter table `eshop_product`.`seckill_activity_product` add column `sale_money` decimal (10,2) DEFAULT NULL COMMENT '抢购价格' after original_price;

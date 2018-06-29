@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>cache-srv</title>
+    <link rel="stylesheet" href="plugins/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="plugins/bootstrap-table-v1.11.1/bootstrap-table.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#serializeUtil" role="tab" data-toggle="tab">序列化工具</a></li>
+</ul>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="serializeUtil">
+        <div class="col-lg-10" style="margin-left: 20%;margin-top: 100px;">
+            <div class="form-group">
+                <label>
+                    <label>key：</label>
+                    <input type="text" id="redisKey" style="width: 700px;"><font id="tips" color="red"></font>
+                    <label>是否序列化：</label>
+                    <label class="radio-inline" for="serializeFlag-1">
+                        <input type="radio" name="serializeFlag" id="serializeFlag-1" value="1" checked>是
+                    </label>
+                    <label class="radio-inline" for="serializeFlag-2">
+                        <input type="radio" name="serializeFlag" id="serializeFlag-2" value="0">否
+                    </label>
+                    <label>类型：</label><select id="keyType">
+                        <option value="value">value</option>
+                        <option value="list">list</option>
+                        <option value="map">map</option>
+                    </select>
+                    <button type="button" class="btn btn-success" id="redisSearch">搜索</button>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>value：</label><span style="color: gray;font-style: italic;">（非序列化可以通过redis desktop可视化软件查看）</span><br>
+                <textarea id="redisValue" cols="150" rows="20"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.2.1.js"></script>
+<script src="plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
+<script src="plugins/bootstrap-table-v1.11.1/bootstrap-table.js"></script>
+<script src="plugins/bootstrap-table-v1.11.1/locale/bootstrap-table-zh-CN.js"></script>
+<script src="plugins/bootstrap-table-v1.11.1/extensions/export/bootstrap-table-export.js"></script>
+<script src="plugins/bootstrap-table-v1.11.1/extensions/export/tableExport.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

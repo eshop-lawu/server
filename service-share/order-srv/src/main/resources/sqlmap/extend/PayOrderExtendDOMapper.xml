@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.order.srv.mapper.extend.PayOrderExtendDOMapper">
+	<resultMap id="ReportBaseResultMap"
+		type="com.lawu.eshop.order.srv.domain.extend.ReportRiseRateView">
+		<result column="keyTxt" property="keyTxt" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ReportFansSaleTransFormResultMap" type="com.lawu.eshop.order.srv.domain.extend.ReportFansSaleTransFormDO">
+		<result column="is_fans" property="isFans" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="BIGINT" />
+	</resultMap>
+
+	<select id="payVolumeRiseRate" resultMap="ReportBaseResultMap"
+		parameterType="java.lang.String">
+		<if test="flag == 1">
+			SELECT
+			DATE_FORMAT(gmt_create, "%d") AS keyTxt,
+			sum(actual_amount) AS num
+			FROM
+			pay_order
+			WHERE
+			DATE_FORMAT(gmt_create,
+			"%Y%m") = #{formatDate} and
+			merchant_id = #{merchantId} and `status` =
+			#{status} GROUP BY
+			DATE_FORMAT(gmt_create, "%d")
+		</if>
+		<if test="flag == 2">
+			SELECT
+			DATE_FORMAT(gmt_create, "%m") AS keyTxt,
+			sum(actual_amount) AS num
+			FROM
+			pay_order
+			WHERE
+			DATE_FORMAT(gmt_create,
+			"%Y") = #{formatDate} and merchant_id = #{merchantId} and `status` =
+			#{status}
+			GROUP BY
+			DATE_FORMAT(gmt_create, "%m")
+		</if>
+	</select>
+
+	<select id="payVolumeTotal" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		<if test="flag == 1">
+			SELECT
+			sum(actual_amount) AS num
+			FROM
+			pay_order
+			WHERE
+			DATE_FORMAT(gmt_create,
+			"%Y%m") = #{formatDate} and
+			merchant_id =
+			#{merchantId} and `status` = #{status}
+		</if>
+		<if test="flag == 2">
+			SELECT
+			sum(actual_amount) AS num
+			FROM
+			pay_order
+			WHERE
+			merchant_id =
+			#{merchantId} and `status` = #{status}
+		</if>
+	</select>
+
+	<select id="getAutoCommentPayOrderList" resultType="com.lawu.eshop.order.srv.domain.extend.PayOrderExtendDOVew" >
+		SELECT
+		id,
+		total_amount AS totalAmount,
+		actual_amount AS actualAmount,
+		favored_amount AS favoredAmount,
+		merchant_id AS merchantId,
+		member_id AS memberId,
+		is_evaluation AS isEvaluation,
+		gmt_create AS gmtCreate
+		FROM
+		pay_order
+		WHERE
+		STATUS = 2
+		AND is_evaluation = 0
+		AND DATE_ADD(gmt_create, INTERVAL 7 DAY) <![CDATA[  <=  ]]> #{value}
+		limit 0 ,20
+	</select>
+
+	<select id="selectByFansSaleTransformPay" parameterType="com.lawu.eshop.order.param.PayOrderReportDataParam" resultMap="ReportFansSaleTransFormResultMap">
+		SELECT so.is_fans, COUNT(so.id) as count
+		FROM pay_order so
+		WHERE so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.status = 2
+		GROUP BY so.is_fans
+	</select>
+</mapper>

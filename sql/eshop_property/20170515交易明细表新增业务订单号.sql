@@ -1,0 +1,1 @@
+alter table transaction_detail add column `biz_num` varchar(30) DEFAULT NULL COMMENT '业务订单号' after `biz_id`;

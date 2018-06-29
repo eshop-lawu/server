@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+       http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${zookeeper.servers}" namespace="product-job"/>
+
+    <!-- 配置作业-->
+    <job:simple id="seckillActivityStartJob" description="抢购活动开始" class="com.lawu.eshop.product.srv.jobs.SeckillActivityStartJob" registry-center-ref="regCenter" cron="0/15 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="seckillActivityEndJob" description="抢购活动结束" class="com.lawu.eshop.product.srv.jobs.SeckillActivityEndJob" registry-center-ref="regCenter" cron="0/20 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="seckillActivityRegistrationEndJob" description="抢购活动报名结束" class="com.lawu.eshop.product.srv.jobs.SeckillActivityRegistrationEndJob" registry-center-ref="regCenter" cron="0/25 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="promptSeckillActivityAboutStartJob" description="抢购活动即将开始提醒" class="com.lawu.eshop.product.srv.jobs.PromptSeckillActivityAboutStartJob" registry-center-ref="regCenter" cron="0/30 * * * * ?" sharding-total-count="1" overwrite="true" job-parameter="10" disabled="${dangdang.ddframe.job.disabled}" />
+</beans>

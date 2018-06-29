@@ -1,0 +1,1 @@
+alter table ad add column  `file_type` tinyint(2)  COMMENT '文件类型 1-视频 2-图片' after media_url;

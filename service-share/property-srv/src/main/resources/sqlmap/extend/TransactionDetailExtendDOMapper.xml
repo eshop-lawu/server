@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.property.srv.mapper.extend.TransactionDetailExtendDOMapper" >
+    
+    <sql id="Example_Where_Clause" >
+      <where >
+        <foreach collection="oredCriteria" item="criteria" separator="or" >
+          <if test="criteria.valid" >
+            <trim prefix="(" suffix=")" prefixOverrides="and" >
+              <foreach collection="criteria.criteria" item="criterion" >
+                <choose >
+                  <when test="criterion.noValue" >
+                    and ${criterion.condition}
+                  </when>
+                  <when test="criterion.singleValue" >
+                    and ${criterion.condition} #{criterion.value}
+                  </when>
+                  <when test="criterion.betweenValue" >
+                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                  </when>
+                  <when test="criterion.listValue" >
+                    and ${criterion.condition}
+                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                      #{listItem}
+                    </foreach>
+                  </when>
+                </choose>
+              </foreach>
+            </trim>
+          </if>
+        </foreach>
+      </where>
+    </sql>
+    
+    <resultMap id="TotalSalesResultMap" type="com.lawu.eshop.property.srv.domain.extend.TotalSalesDO">
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="transaction_type" jdbcType="TINYINT" property="transactionType" />
+    </resultMap>
+    
+    
+    <resultMap id="TotalSalesGroupByAreaResultMap" type="com.lawu.eshop.property.srv.domain.extend.TotalSalesGroupByAreaDO">
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="transaction_type" jdbcType="TINYINT" property="transactionType" />
+        <result column="province_id" jdbcType="INTEGER" property="provinceId" />
+        <result column="city_id" jdbcType="INTEGER" property="cityId" />
+        <result column="area_id" jdbcType="INTEGER" property="areaId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+    </resultMap>
+    
+    <resultMap id="UserIncomeExpenditureResultMap" type="com.lawu.eshop.property.srv.domain.extend.UserIncomeExpenditureDO">
+        <result column="user_num" jdbcType="VARCHAR" property="userNum" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="direction" jdbcType="TINYINT" property="direction" />
+    </resultMap>
+    
+    <resultMap id="MonthlyBillResultMap" type="com.lawu.eshop.property.srv.domain.extend.MonthlyBillDO">
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="direction" jdbcType="TINYINT" property="direction" />
+    </resultMap>
+    
+    <!-- 根据时间获取获取买单和订单的收入 -->
+	<select id="selectTotalSales"  resultMap="TotalSalesResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.TotalSalesQueryExample">
+		SELECT sum(amount) as amount, transaction_type FROM transaction_detail 
+		WHERE transaction_type in (100, 101)
+		AND gmt_create BETWEEN #{start} AND #{end}
+		GROUP BY transaction_type
+	</select>
+	
+	<!-- 用户收入统计 -->
+    <select id="selectUserIncomeExpenditure"  resultMap="UserIncomeExpenditureResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.UserIncomeExpenditureExample">
+		SELECT user_num, sum(amount) AS amount, direction FROM transaction_detail 
+		WHERE gmt_create BETWEEN #{start} and #{end}
+		GROUP BY user_num, direction
+        LIMIT #{offset},#{pageSize}
+    </select>
+    
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.property.srv.domain.extend.ReportAdEarningsPointView">
+	    <result column="user_totle_point" jdbcType="DECIMAL" property="userTotalPoint" />
+	    <result column="love_totle_point" jdbcType="DECIMAL" property="loveTotalPoint" />
+	</resultMap>
+  
+ 	<select id="getReportAdEarningsPoint"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdPointView">
+	    select
+	    	sum(amount) as user_totle_point
+	    from transaction_detail
+	    where
+	      	transaction_type =#{pointType,jdbcType=TINYINT}
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	 </select>
+	 
+	 
+	 <select id="getReportAdEarningsLovePoint"  resultMap="BaseResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAdPointView">
+	    select
+	    	sum(amount) as love_totle_point
+	    from love_detail
+	    where
+	      	love_type =#{loveType,jdbcType=TINYINT}
+	      	and biz_id=#{bizId,jdbcType=BIGINT}
+	 </select>
+	 
+	 <!-- 用户广告总收益统计   包括点广告  红包    抢赞  -->
+	 <select id="getUserPointByBzId"  resultMap="BaseResultMap" >
+	    select
+	    	biz_id,
+	    	sum(amount) as user_totle_point
+	    from transaction_detail
+	    where
+	      	transaction_type in (16,20,23,24)
+	      	and biz_id in
+	      	<foreach collection="list" item="bizId" open="(" close=")" separator=",">
+	            #{bizId}
+	        </foreach>
+	        GROUP BY  biz_id
+	 </select>
+	 
+	 
+	 <select id="getLovePointByBzId"  resultMap="BaseResultMap">
+	    select
+	   		biz_id,
+	    	sum(amount) as love_totle_point
+	    from love_detail
+	    where
+	      	love_type in (1,5,6)
+	      	and biz_id in
+	      	<foreach collection="list" item="bizId" open="(" close=")" separator=",">
+	            #{bizId}
+	        </foreach>
+	        GROUP BY  biz_id
+	 </select>
+	  <!-- 根据时间获取获取买单和订单的收入group by areaId -->
+	<select id="selectTotalSalesGroupByArea"  resultMap="TotalSalesGroupByAreaResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.TotalSalesQueryExample">
+		SELECT sum(amount) as amount, province_id, city_id, area_id, transaction_type, case when transaction_type = 100 then '买单' else '订单' end type
+		FROM transaction_detail 
+			WHERE transaction_type in (100, 101)
+			AND gmt_create BETWEEN #{start} AND #{end}
+		GROUP BY transaction_type,province_id,city_id,area_id
+	</select>
+
+	<resultMap id="IncomeMsgResultMap" type="com.lawu.eshop.property.srv.domain.extend.IncomeMsgDOView">
+		<result column="user_num" jdbcType="VARCHAR" property="userNum" />
+		<result column="amount" jdbcType="DECIMAL" property="money" />
+		<result column="transaction_type" jdbcType="TINYINT" property="bType" />
+	</resultMap>
+
+	<select id="getIncomeMsgDataList"  resultMap="IncomeMsgResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.IncomeMsgExample">
+		SELECT
+			user_num,
+			transaction_type,
+			sum(amount) amount
+		FROM
+			transaction_detail
+		WHERE
+			transaction_type IN (5,12, 13, 102,115, 116)
+		AND gmt_create BETWEEN #{begin}
+		AND #{end}
+		group by user_num,transaction_type LIMIT ${offset},${pageSize}
+	</select>
+
+	<select id="getIncomeMsgTotalDataList"  resultMap="IncomeMsgResultMap" parameterType="com.lawu.eshop.property.srv.domain.extend.IncomeMsgExample">
+		SELECT
+		user_num,
+		sum(amount) amount
+		FROM
+		transaction_detail
+		WHERE
+		transaction_type IN (5,12, 13, 102,115, 116)
+		AND gmt_create BETWEEN #{begin}
+		AND #{end}
+		group by user_num
+	</select>
+    
+    <select id="selectMonthlyBill"  resultMap="MonthlyBillResultMap" parameterType="com.lawu.eshop.property.srv.domain.TransactionDetailDOExample">
+        SELECT
+            sum(amount) as amount, direction
+        FROM
+            transaction_detail
+        <if test="_parameter != null">
+          <include refid="Example_Where_Clause" />
+        </if>
+        GROUP BY direction
+    </select>
+</mapper>

@@ -1,0 +1,2 @@
+alter table member add column `is_freeze` tinyint(1) DEFAULT '0' COMMENT '是否冻结（0：未冻结 1：冻结）' after `status`;
+alter table merchant add column `is_freeze` tinyint(1) DEFAULT '0' COMMENT '是否冻结（0：未冻结 1：冻结）' after `status`;

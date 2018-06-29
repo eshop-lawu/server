@@ -1,0 +1,1 @@
+alter table `eshop_activity`.`draw_lottery_activity_record` add column  express_num varchar(20) DEFAULT NULL COMMENT '物流单号' after prize_name;

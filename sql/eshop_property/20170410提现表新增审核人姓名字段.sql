@@ -1,0 +1,1 @@
+alter table point_detail add column `audit_user_name` varchar(50) DEFAULT NULL COMMENT '审核人姓名';

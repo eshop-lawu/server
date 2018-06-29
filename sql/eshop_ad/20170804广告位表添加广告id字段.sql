@@ -1,0 +1,1 @@
+alter table ad_platform add column  `ad_id` bigint(20)  COMMENT '广告id' after product_id;

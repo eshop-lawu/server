@@ -1,0 +1,1 @@
+alter table withdraw_cash modify audit_faild_reason text DEFAULT NULL COMMENT '审核失败原因';

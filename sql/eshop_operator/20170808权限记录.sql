@@ -1,0 +1,2 @@
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `gmt_modified`, `gmt_create`) VALUES ('100', '会员管理', 'memberManage', '', '0', '2017-04-19 16:22:48', '2017-04-19 16:22:48');
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `gmt_modified`, `gmt_create`) VALUES ('101', '账号管理', 'member:list', 'member/member.html', '100', '2017-04-19 16:22:48', '2017-04-19 16:22:48');

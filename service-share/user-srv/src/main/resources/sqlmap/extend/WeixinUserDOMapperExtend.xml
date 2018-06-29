@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.WeixinUserDOMapperExtend" >
+
+    <select id="updateNotBind"  parameterType="java.lang.Long">
+        update weixin_user set user_num = null where id =#{id}
+    </select>
+
+
+</mapper>

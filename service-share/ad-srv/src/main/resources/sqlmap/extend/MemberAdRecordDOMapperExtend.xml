@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.ad.srv.mapper.extend.MemberAdRecordDOMapperExtend">
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.ad.srv.domain.extend.MemberAdRecordDOView">
+    <result column="totlePoint" jdbcType="DECIMAL" property="totlePoint" />
+  </resultMap>
+  
+  <!-- 今天获取积分 -->
+  <select id="selectPointToday" parameterType="com.lawu.eshop.ad.srv.domain.MemberAdRecordDO" resultMap="BaseResultMap">
+   select sum(point) as totlePoint from member_ad_record  WHERE member_id=#{memberId,jdbcType=BIGINT}   and click_date=#{clickDate,jdbcType=DATE}
+  </select>
+  
+  <resultMap id="BasePointResultMap" type="com.lawu.eshop.ad.srv.domain.extend.MemberAdRecordDOView">
+    <result column="point" jdbcType="DECIMAL" property="point" />
+  </resultMap>
+  <select id="getTotlePoint" parameterType="java.lang.Long" resultMap="BasePointResultMap">
+   	  SELECT IFNULL(sum(original_point),0) as totlePoint FROM member_ad_record  where   ad_id=#{adId,jdbcType=BIGINT}
+  </select>
+ 
+</mapper>

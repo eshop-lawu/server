@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+       http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${zookeeper.servers}" namespace="mall-job"/>
+
+    <!-- 配置作业-->
+	
+    <!-- 阿里短信-->
+    <bean id="aliyunSmsServiceImpl" class="com.lawu.aliyun.AliyunSmsServiceImpl">
+        <property name="accessKeyId" value="${aliyun.sms.accessKeyId}"/>
+        <property name="accessKeySecret" value="${aliyun.sms.accessKeySecret}"/>
+        <property name="product" value="${aliyun.sms.product}"/>
+        <property name="aliUrl" value="${aliyun.sms.aliUrl}"/>
+        <property name="signName" value="${aliyun.sms.signName}"/>
+    </bean>
+</beans>

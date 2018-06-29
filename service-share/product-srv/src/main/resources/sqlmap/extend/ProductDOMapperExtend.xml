@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.ProductDOMapperExtend">
+
+	<update id="editTotalInventory"
+		parameterType="com.lawu.eshop.product.srv.domain.extend.ProductNumsView">
+		update product set
+		<if test='flag == "M"'>
+			total_inventory = total_inventory -
+			#{num,jdbcType=INTEGER},
+		</if>
+		<if test='flag == "A"'>
+			total_inventory = total_inventory +
+			#{num,jdbcType=INTEGER},
+		</if>
+		gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+		where id =
+		#{productId,jdbcType=BIGINT}
+	</update>
+	<update id="editTotalSaleVolume"
+		parameterType="com.lawu.eshop.product.srv.domain.extend.ProductNumsView">
+		update product set
+		<if test='flag == "M"'>
+			total_sales_volume = total_sales_volume -
+			#{num,jdbcType=INTEGER},
+		</if>
+		<if test='flag == "A"'>
+			total_sales_volume = total_sales_volume +
+			#{num,jdbcType=INTEGER},
+		</if>
+		gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+		where id =
+		#{productId,jdbcType=BIGINT}
+	</update>
+	<update id="editTotalFavorite"
+		parameterType="com.lawu.eshop.product.srv.domain.extend.ProductNumsView">
+		update product set
+		<if test='flag == "M"'>
+			total_favorite = total_favorite -
+			#{num,jdbcType=INTEGER},
+		</if>
+		<if test='flag == "A"'>
+			total_favorite = total_favorite +
+			#{num,jdbcType=INTEGER},
+		</if>
+		gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+		where id =
+		#{productId,jdbcType=BIGINT}
+	</update>
+
+	<select id="listProductByIds" parameterType="java.util.List" resultType="com.lawu.eshop.product.srv.domain.extend.ProductDOView">
+		select id,total_sales_volume as totalSalesVolume,max_price as maxPrice,min_price as minPrice from product
+		WHERE id in
+		<foreach collection="list" item="id" open="(" close=")" separator=",">
+		  	#{id}
+		</foreach>
+	</select>
+
+	<!-- 要购物门店详情店铺首页-->
+	<select id="listHotProduct" resultType="com.lawu.eshop.product.srv.domain.extend.ShoppingProductDOView"
+			parameterType="com.lawu.eshop.product.param.ListShoppingProductParam">
+		SELECT
+			id AS productId,
+			name AS name,
+			min_price AS minPrice,
+			max_price AS maxPrice,
+			total_sales_volume AS totalSalesVolume,
+			feature_image AS featureImage
+		FROM
+			product
+		WHERE
+			merchant_id = #{merchantId}
+		AND STATUS = 2
+		ORDER BY total_sales_volume DESC
+		LIMIT #{offset},#{pageSize}
+	</select>
+
+	<select id="listAllProduct" resultType="com.lawu.eshop.product.srv.domain.extend.ShoppingProductDOView"
+			parameterType="com.lawu.eshop.product.param.ListShoppingProductParam">
+		SELECT
+		id AS productId,
+		name AS name,
+		min_price AS minPrice,
+		max_price AS maxPrice,
+		total_sales_volume AS totalSalesVolume,
+		feature_image AS featureImage
+		FROM
+		product
+		WHERE
+		merchant_id = #{merchantId}
+		AND STATUS = 2
+		LIMIT #{offset},#{pageSize}
+	</select>
+
+	<select id="listNewProduct" resultType="com.lawu.eshop.product.srv.domain.extend.ShoppingProductDOView"
+			parameterType="com.lawu.eshop.product.param.ListShoppingProductParam">
+		SELECT
+		id AS productId,
+		name AS name,
+		min_price AS minPrice,
+		max_price AS maxPrice,
+		total_sales_volume AS totalSalesVolume,
+		feature_image AS featureImage
+		FROM
+		product
+		WHERE
+		merchant_id = #{merchantId}
+		AND STATUS = 2
+		ORDER BY id DESC
+		LIMIT #{offset},#{pageSize}
+	</select>
+	
+	<update id="updateByExampleSelective"
+		parameterType="com.lawu.eshop.product.srv.domain.extend.ProductDOEditView">
+		update product set
+			total_sales_volume = #{totalSalesVolume,jdbcType=INTEGER},
+			min_price = #{minPrice,jdbcType=DECIMAL},
+        	max_price = #{maxPrice,jdbcType=DECIMAL},
+		<if test='flag == "U"'>
+			total_inventory = total_inventory + #{totalInventory,jdbcType=INTEGER}
+		</if>
+		<if test='flag == "A"'>
+			total_inventory = #{totalInventory,jdbcType=INTEGER}
+		</if>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="listProductCity" resultType="com.lawu.eshop.product.srv.domain.extend.ProductCityDOView">
+		select city_id as cityId, city_name as cityName from product
+		WHERE city_id is not null and status = 2
+		GROUP BY city_id, city_name
+		ORDER BY count(city_id) DESC
+	</select>
+
+	<select id="listMerchantProductCategory" resultType="com.lawu.eshop.product.srv.domain.extend.ProductCategoryItemDOView">
+		select category_id as id, category_name as name from product
+		WHERE merchant_id = #{merchantId,jdbcType=BIGINT} and category_id is not null
+		GROUP BY category_id, category_name
+	</select>
+
+	<select id="listProductCategoryItem" resultType="com.lawu.eshop.product.srv.domain.extend.ProductCategoryItemDOView">
+		select category_subitem_id as id, category_subitem_name as name from product
+		WHERE merchant_id = #{merchantId,jdbcType=BIGINT} and category_id = #{categoryId,jdbcType=INTEGER} and category_subitem_id is not null
+		GROUP BY category_subitem_id, category_subitem_name
+	</select>
+
+</mapper>

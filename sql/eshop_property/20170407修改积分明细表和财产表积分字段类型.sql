@@ -1,0 +1,2 @@
+alter table point_detail modify column `point` decimal(11,6) NOT NULL DEFAULT '0.000000' COMMENT '积分';
+alter table property_info modify column `point` decimal(11,6) NOT NULL DEFAULT '0.000000' COMMENT '积分';

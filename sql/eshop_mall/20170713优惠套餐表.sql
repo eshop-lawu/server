@@ -1,0 +1,2 @@
+-- 修改注释
+ALTER TABLE `discount_package` MODIFY COLUMN `use_time_week`  varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '使用时间-周一到周日(用0-6表示,0为周日,并用逗号分隔)' AFTER `validity_period_end`;

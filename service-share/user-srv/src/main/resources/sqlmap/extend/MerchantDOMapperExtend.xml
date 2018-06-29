@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.user.srv.mapper.extend.MerchantDOMapperExtend" >
+
+    <resultMap id="inviteResultMap" type="com.lawu.eshop.user.srv.domain.extend.InviteMerchantInfoView" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="account" property="account" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+        <result column="name" property="storeName" jdbcType="VARCHAR" />
+        <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="principal_name" property="principalName" jdbcType="VARCHAR" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+    </resultMap>
+
+    <update id="delMerchantGtPush"  parameterType="java.lang.Long">
+        update merchant set gt_cid = NULL where id = #{merchantId}
+    </update>
+    
+    <select id="getMerchantViewById" parameterType="java.lang.Long" resultType="com.lawu.eshop.user.srv.domain.extend.MerchantDOView">
+        select m.account,ms.name as storeName from merchant m left join merchant_store ms on m.id = ms.merchant_id
+        where m.id = #{id}
+    </select>
+
+    <select id="selectNumLikeContent" resultType="java.lang.String" parameterType="java.lang.String" >
+        select
+        num
+        from merchant me
+        left join merchant_store ms on me.id=ms.merchant_id
+        where ms.name like #{queryContent} or me.account like #{queryContent}
+        <if test="_parameter == '%E店商家%'.toString()" >
+            or ms.name is null
+        </if>
+    </select>
+
+    <select id="selectInviteMerchantInfo" resultMap="inviteResultMap" parameterType="java.lang.String">
+        select
+        me.id as id,
+        me.account as account,
+        me.level as level,
+        ms.name as name,
+        ms.principal_name as principal_name,
+        ms.region_name as region_name,
+        ms.address as address,
+        ms.status as status,
+        me.gmt_create as gmt_create
+        from merchant me
+        left join merchant_store ms on me.id=ms.merchant_id
+        where me.num = #{inviteUserNum}
+    </select>
+
+    <select id="merchantSameIpCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.SameIpCountParam">
+        SELECT count(reg_ip) as c FROM merchant_profile where id in(
+        SELECT
+        id
+        FROM
+        merchant
+        WHERE
+        inviter_id =#{id}
+        AND inviter_type = #{type}
+        )
+        GROUP BY reg_ip
+        order BY c desc
+
+    </select>
+
+    <select id="abnormalMerchantList" resultType="com.lawu.eshop.user.srv.domain.extend.AbnormalAccountDOView" parameterType="com.lawu.eshop.user.param.AbnormalJobParam">
+
+        SELECT
+        m.id,m.account,m.num as userNum
+        FROM
+        merchant_profile as p
+        inner join merchant as m
+        on p.id = m.id
+        WHERE
+        p.invite_member_count + p.invite_merchant_count  &gt;#{tapeOutNumber}
+        AND m.is_freeze = 0
+        AND p.gmt_modified &gt;= #{startTime}
+        AND p.gmt_modified &lt;= #{endTime}
+        limit #{offset},#{pageSize}
+
+    </select>
+
+    <!-- 邀请商家总数-->
+    <select id="inviteMerchantTotalCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.SameIpCountParam">
+        SELECT count(1)  FROM merchant_profile where id in(
+        SELECT
+        id
+        FROM
+        merchant
+        WHERE
+        inviter_id =#{id}
+        AND inviter_type = #{type}
+        )
+
+    </select>
+
+    <!-- 根据用户编号标记改用户所有的一级下线为僵尸账户 -->
+    <update id="updateZombieAccount">
+        UPDATE merchant set is_zombie = #{isZombie,jdbcType=BIT} WHERE num IN (
+            SELECT invite_user_num FROM invite_relation WHERE user_num = #{num,jdbcType=VARCHAR} AND depth = 1 AND invite_user_num LIKE "B%"
+        )
+    </update>
+
+    <select id="getMerchantChatInfo" parameterType="java.lang.String" resultType="com.lawu.eshop.user.srv.domain.extend.MerchantDOView">
+        select m.id,ms.id as storeId from merchant m left join merchant_store ms on m.id = ms.merchant_id
+        where m.num = #{num}
+    </select>
+</mapper>

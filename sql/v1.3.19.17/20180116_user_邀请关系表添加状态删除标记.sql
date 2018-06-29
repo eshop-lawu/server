@@ -1,0 +1,2 @@
+alter table eshop_user.invite_relation add column  `status` tinyint(2) default '1'  COMMENT '有效状态0:未生效1:生效' after type;
+alter table eshop_user.invite_relation add column  `is_del` tinyint(1) default '0'  COMMENT '是否删除，1-删除' after status;

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.lawu">
+        <context:exclude-filter type="annotation" expression="org.springframework.cloud.netflix.feign.FeignClient" />
+        <context:exclude-filter type="annotation" expression="org.springframework.boot.autoconfigure.SpringBootApplication" />
+    </context:component-scan>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="nullValue" value="@null"/>
+        <property name="localOverride" value="true"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:bootstrap.properties</value>
+            </list>
+        </property>
+        <property name="order" value="0"/>
+        <property name="fileEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:mem:bone;DB_CLOSE_DELAY=-1;MODE=MySQL"/>
+    </bean>
+    <jdbc:initialize-database data-source="dataSource" ignore-failures="DROPS">
+        <jdbc:script location="classpath:sql/ddl.sql"/>
+    </jdbc:initialize-database>
+</beans>

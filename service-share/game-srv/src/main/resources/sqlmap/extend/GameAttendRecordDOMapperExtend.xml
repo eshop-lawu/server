@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.game.srv.mapper.extend.GameAttendRecordDOMapperExtend" >
+
+	<resultMap id="BaseResultMap" type="com.lawu.eshop.game.srv.domain.extend.GamePointReportView">
+		<result column="reward_sum_point" jdbcType="DECIMAL" property="rewardSumPoint" />
+		<result column="attend_sum_point" jdbcType="DECIMAL" property="attendSumPoint" />
+		<result column="attend_type" jdbcType="TINYINT" property="attendType" />
+	</resultMap>
+
+    <select id="getReportGameMindAttendRecord"   resultMap="BaseResultMap" resultType="com.lawu.eshop.game.srv.domain.extend.GamePointReportView">
+        SELECT
+			mind.attend_type as attend_type,
+			IFNULL(SUM(mind.attend_point),0) AS attend_sum_point,
+			IFNULL(SUM(mind.reward_point),0) AS reward_sum_point
+		FROM
+			game_mind_attend_record mind
+		WHERE
+			mind.`status` IN (1, 3, 4)
+			AND gmt_create BETWEEN #{beginDate}
+			AND #{endDate}
+		GROUP BY
+			mind.attend_type
+    </select>
+
+   <select id="getReportGamePuzzleAttendRecord"   resultMap="BaseResultMap" resultType="com.lawu.eshop.game.srv.domain.extend.GamePointReportView">
+        SELECT
+			puzzle.attend_type as attend_type,
+			IFNULL(SUM(puzzle.attend_point),0) AS attend_sum_point,
+			IFNULL(SUM(puzzle.reward_point),0) AS reward_sum_point
+		FROM
+			game_puzzle_attend_record puzzle
+		WHERE
+			puzzle.`status` IN (1, 3, 4)
+			AND gmt_create BETWEEN #{beginDate}
+			AND #{endDate}
+		GROUP BY
+			puzzle.attend_type
+    </select>
+
+	<select id="getReportGameDialAttendRecord"   resultMap="BaseResultMap" resultType="com.lawu.eshop.game.srv.domain.extend.GamePointReportView">
+		SELECT IFNULL(SUM(pay_point),0) AS reward_sum_point FROM game_dial_record
+		WHERE status BETWEEN 1 AND 6 AND pay_point > 0 AND gmt_create BETWEEN #{beginDate} AND #{endDate}
+	</select>
+
+</mapper>

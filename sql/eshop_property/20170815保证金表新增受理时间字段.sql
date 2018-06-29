@@ -1,0 +1,1 @@
+alter table business_deposit add column `gmt_accpet` datetime DEFAULT NULL COMMENT '受理时间' AFTER `gmt_refund`;

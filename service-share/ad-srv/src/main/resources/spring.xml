@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+       xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+       http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd">
+
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${zookeeper.servers}" namespace="ad-job"/>
+
+    <!-- 配置作业-->
+    <job:simple id="AdPuttedJob" description="广告结束" class="com.lawu.eshop.ad.srv.job.AdPuttedJob" job-parameter="1000" registry-center-ref="regCenter" cron="3/10 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="AdPuttingJob" description="广告开始" class="com.lawu.eshop.ad.srv.job.AdPuttingJob" job-parameter="1000" registry-center-ref="regCenter"  cron="6/10 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="AdFlatAndVideoJob" description="平面视频广告下架" class="com.lawu.eshop.ad.srv.job.AdFlatAndVideoJob" job-parameter="1000" registry-center-ref="regCenter" cron="9/10 * * * * ?" sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+</beans>

@@ -1,0 +1,1 @@
+alter table `eshop_game`.`game_mind_config` add column  question_simple_count int(5) default '0' COMMENT '简单题目个数' after question_count;

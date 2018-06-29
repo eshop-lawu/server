@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.property.srv.mapper.extend.IncomeDailySummaryDOMapperExtend">
+    <update id="addMoeny" parameterType="com.lawu.eshop.property.param.CountIncomeBroadcastParam" >
+        UPDATE income_daily_summary
+        SET money = money + #{money,jdbcType=DECIMAL}
+        WHERE gmt_report = #{gmtReport} and income_type = ${incomeType} and user_num = #{userNum}
+    </update>
+</mapper>

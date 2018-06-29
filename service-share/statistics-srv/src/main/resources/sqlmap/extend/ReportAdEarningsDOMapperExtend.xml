@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportAdEarningsDOMapperExtend">
+  
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.statistics.srv.domain.ReportAdEarningsDO">
+    <result column="ad_id" jdbcType="BIGINT" property="adId" />
+  </resultMap>
+  
+  <select id="getReportAdEarningsIds"  resultMap="BaseResultMap">
+    select
+    	ad_id
+    from report_ad_earnings
+    where
+      	ad_status =3
+  </select>
+</mapper>

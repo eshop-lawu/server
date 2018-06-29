@@ -1,0 +1,1 @@
+alter table freeze add column `order_num` varchar(30) DEFAULT NULL COMMENT '订单号' after `biz_id`;

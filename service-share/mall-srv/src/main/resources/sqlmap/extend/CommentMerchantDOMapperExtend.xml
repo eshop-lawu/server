@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.mall.srv.mapper.extend.CommentMerchantDOMapperExtend">
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.mall.srv.domain.extend.CommentMerchantDOView">
+
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="reply_content" property="replyContent" jdbcType="VARCHAR"/>
+        <result column="grade" property="grade" jdbcType="TINYINT"/>
+        <result column="member_id" property="memberId" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="BIGINT"/>
+        <result column="is_anonymous" property="isAnonymous" jdbcType="BIT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_reply" property="gmtReply" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <select id="selectAvgGrade" resultType="java.lang.Double" parameterType="java.lang.Long">
+        SELECT
+	    ifnull(AVG(grade),0)
+      FROM
+	  comment_merchant
+	  WHERE merchant_id = #{merchantId} and status = 1
+    </select>
+
+    <!-- 根据商家ID查询用户评论总数(有图片)-->
+    <select id="selectCountByMerchantId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+         SELECT
+        COUNT(cm.id)
+        FROM
+        comment_merchant cm
+        WHERE
+        cm.merchant_id = #{merchantId}
+         AND cm.status = 1
+         AND cm.is_have_img = 1
+    </select>
+
+    <!-- 根据商家ID查询用户评论列表(有图片)-->
+    <select id="selectCommentsWithImg" resultMap="BaseResultMap" parameterType="com.lawu.eshop.mall.param.CommentMerchantPageParam">
+        SELECT
+        cm.id as id,
+        cm.content,
+        cm.reply_content,
+        cm.grade,
+        cm.member_id,
+        cm.is_anonymous,
+        cm.status,
+        cm.gmt_create,
+        cm.merchant_id
+        FROM
+        comment_merchant cm
+        WHERE
+        cm.merchant_id = #{merchantId}
+        AND cm.status = 1
+        AND cm.is_have_img =1
+        ORDER  BY
+        cm.id DESC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <!-- 查商家好评总数-->
+    <select id="selectGoodGradeCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        comment_merchant
+        WHERE
+        merchant_id = #{merchantId}
+        AND status = 1
+        AND  grade  &gt;= 4
+    </select>
+
+    <select id="getAvgSpend" resultType="java.lang.Double" parameterType="java.lang.Long">
+        SELECT
+        ifnull(AVG(avg_spend),0)
+        FROM
+        comment_merchant
+        WHERE merchant_id =#{merchantId} and status=1 and avg_spend >0
+    </select>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.SeckillActivityDOMapperExtend" >
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.product.srv.domain.extend.SeckillActivityDOView" >
+  	<id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="member_level" jdbcType="TINYINT" property="memberLevel" />
+    <result column="product_valid_count" jdbcType="INTEGER" property="productValidCount" />
+    <result column="selling_price" jdbcType="DECIMAL" property="sellingPrice" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="activity_status" jdbcType="TINYINT" property="activityStatus" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+  </resultMap>
+
+  <!-- 活动管理列表查询 -->
+  <select resultMap="BaseResultMap" parameterType="java.lang.Long" id="queryManagePage" >
+   		SELECT
+			sap.activity_id as id,
+			sa.activity_status,
+			sa.`name`,
+			sa.picture,
+			sa.selling_price,
+			sa.start_date,
+			sa.end_date 
+		FROM
+			seckill_activity sa
+		LEFT JOIN seckill_activity_product sap ON sa.id = sap.activity_id
+		WHERE
+			sap.merchant_id = #{merchantId,jdbcType=BIGINT} and sa.`status`=1
+			GROUP BY sap.activity_id
+  </select>
+  
+  <select resultType="java.lang.Integer" parameterType="java.lang.Long" id="countManage" >
+   		SELECT
+			count(*)
+		FROM
+			(
+				SELECT
+			sap.activity_id as id
+		FROM
+			seckill_activity sa
+		LEFT JOIN seckill_activity_product sap ON sa.id = sap.activity_id
+		WHERE
+			sap.merchant_id = #{merchantId,jdbcType=BIGINT} and sa.`status`=1
+			GROUP BY sap.activity_id
+			) AS sap
+  </select>
+  
+  <!-- 查询商品是否参入活动 -->
+  <select resultType="java.lang.Integer" parameterType="java.lang.Long" id="selectJoinStatus" >
+   		  SELECT
+			count(*)
+		FROM
+			seckill_activity_product sap 	
+		LEFT JOIN seckill_activity sa ON sap.activity_id = sa.id
+		WHERE
+			sap.product_id = #{productId,jdbcType=BIGINT} AND sap.`status` != 3 AND sa.activity_status !=6 AND sa.`status`=1
+  </select>
+  
+
+</mapper>

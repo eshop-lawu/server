@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="productOrderRefund" name="商品订单退款" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <userTask id="requestRefund" name="用户申请退款"></userTask>
+    <userTask id="agreeRefund" name="商家是否同意退款"></userTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow1" sourceRef="agreeRefund" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="startevent1" targetRef="requestRefund"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="exclusivegateway1" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="requestRefund" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="noNeedReturn" name="不需要退货" sourceRef="exclusivegateway2" targetRef="agreeRefund"></sequenceFlow>
+    <userTask id="fillReturnAddress" name="商家填写退货地址"></userTask>
+    <sequenceFlow id="needReturn" name="需要退货" sourceRef="exclusivegateway2" targetRef="fillReturnAddress"></sequenceFlow>
+    <userTask id="returnGoods" name="用户退货,填写物流信息"></userTask>
+    <sequenceFlow id="flow6" sourceRef="fillReturnAddress" targetRef="returnGoods"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="returnGoods" targetRef="agreeRefund"></sequenceFlow>
+    <userTask id="applyPlatformIntervention" name="用户是否申请平台介入"></userTask>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway1" targetRef="applyPlatformIntervention"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="是否需要退还货物"></exclusiveGateway>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_productOrderRefund">
+    <bpmndi:BPMNPlane bpmnElement="productOrderRefund" id="BPMNPlane_productOrderRefund">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="61.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="653.0" y="279.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="requestRefund" id="BPMNShape_requestRefund">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="agreeRefund" id="BPMNShape_agreeRefund">
+        <omgdc:Bounds height="55.0" width="105.0" x="460.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="650.0" y="127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="fillReturnAddress" id="BPMNShape_fillReturnAddress">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="returnGoods" id="BPMNShape_returnGoods">
+        <omgdc:Bounds height="65.0" width="105.0" x="180.0" y="370.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="applyPlatformIntervention" id="BPMNShape_applyPlatformIntervention">
+        <omgdc:Bounds height="65.0" width="105.0" x="770.0" y="115.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="213.0" y="127.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="565.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="650.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="96.0" y="47.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="47.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="670.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="267.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="279.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="232.0" y="75.0"></omgdi:waypoint>
+        <omgdi:waypoint x="233.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="noNeedReturn" id="BPMNEdge_noNeedReturn">
+        <omgdi:waypoint x="253.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="460.0" y="147.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="60.0" x="330.0" y="127.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="needReturn" id="BPMNEdge_needReturn">
+        <omgdi:waypoint x="233.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="232.0" y="240.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="48.0" x="241.0" y="199.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="232.0" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="232.0" y="370.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="285.0" y="402.0"></omgdi:waypoint>
+        <omgdi:waypoint x="512.0" y="402.0"></omgdi:waypoint>
+        <omgdi:waypoint x="512.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="690.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="770.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

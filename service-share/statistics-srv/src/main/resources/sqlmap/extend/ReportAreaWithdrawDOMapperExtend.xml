@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportAreaWithdrawDOMapperExtend">
+
+    <select id="selectAreaWithdrawDailyReport" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportAreaWithdrawDOView"
+            parameterType="com.lawu.eshop.statistics.param.ReportAreaWithdrawParam">
+      SELECT SUM(member_money) as memberMoney,SUM(merchant_money) as merchantMoney,SUM(total_money) as totalMoney from report_area_withdraw_daily WHERE city_id = #{cityId}
+        AND gmt_report &gt;= #{beginDate} and gmt_report &lt;= #{endDate}
+    </select>
+
+    <select id="selectAreaWithdrawMonthReport" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportAreaWithdrawDOView"
+            parameterType="com.lawu.eshop.statistics.param.ReportAreaWithdrawParam">
+        SELECT SUM(member_money) as memberMoney,SUM(merchant_money) as merchantMoney,SUM(total_money) as totalMoney from report_area_withdraw_month WHERE city_id = #{cityId}
+        AND gmt_report &gt;= #{beginDate} and gmt_report &lt;= #{endDate}
+    </select>
+
+
+</mapper>

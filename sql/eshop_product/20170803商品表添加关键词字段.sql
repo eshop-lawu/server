@@ -1,0 +1,1 @@
+alter table product add column `keywords` VARCHAR(100) NULL DEFAULT NULL COMMENT '关键词' after `content`;

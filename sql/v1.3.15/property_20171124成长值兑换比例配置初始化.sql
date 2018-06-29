@@ -1,0 +1,1 @@
+INSERT INTO `eshop_user`.`property` (`name`, `value`, `remark`, `gmt_modified`, `gmt_create`) VALUES ('growth_value_rate', '1', '成长值比例', '2017-11-24 11:41:29', '2017-11-24 11:41:32');

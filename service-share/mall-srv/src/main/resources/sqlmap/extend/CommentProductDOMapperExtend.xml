@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.mall.srv.mapper.extend.CommentProductDOMapperExtend">
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.mall.srv.domain.extend.CommentProductDOView">
+
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="reply_content" property="replyContent" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="TINYINT" />
+        <result column="member_id" property="memberId" jdbcType="BIGINT" />
+        <result column="merchant_id" property="merchantId" jdbcType="BIGINT" />
+        <result column="product_id" property="productId" jdbcType="BIGINT" />
+        <result column="order_item_id" property="orderItemId" jdbcType="BIGINT" />
+        <result column="product_model_id" property="productModelId" jdbcType="BIGINT" />
+        <result column="is_anonymous" property="isAnonymous" jdbcType="BIT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="gmt_reply" property="gmtReply" jdbcType="TIMESTAMP" />
+
+    </resultMap>
+
+    <!-- 根据商品ID查询用户评论列表(有图片)-->
+    <select id="selectCommentsWithImg" resultMap="BaseResultMap" parameterType="com.lawu.eshop.mall.param.CommentProductPageParam">
+        SELECT
+        cp.id as id,
+        cp.content,
+        cp.reply_content,
+        cp.grade,
+        cp.member_id,
+        cp.is_anonymous,
+        cp.status,
+        cp.gmt_create,
+        cp.order_item_id,
+        cp.product_model_id
+        FROM
+        comment_product cp
+        WHERE
+        cp.product_id = #{productId}
+        AND cp.status = 1
+        AND cp.is_have_img = 1
+        ORDER  BY
+        cp.id DESC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <!-- 根据商品ID查询用户评论总数(有图片)-->
+    <select id="selectCountByProductId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT
+        COUNT(cp.id)
+        FROM
+        comment_product cp
+        WHERE
+        cp.product_id = #{productId}
+        AND cp.status = 1
+        AND cp.is_have_img = 1
+    </select>
+
+    <!-- 查商家好评总数-->
+    <select id="selectGoodGradeCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        comment_product
+        WHERE
+        product_id = #{productId}
+        AND status = 1
+        AND  grade  &gt;= 4
+    </select>
+
+    <select id="selectAvgGrade" resultType="java.lang.Double" parameterType="java.lang.Long">
+        SELECT
+        AVG(grade)
+        FROM
+        comment_product
+        WHERE product_id =#{productId} AND status = 1
+    </select>
+
+
+    <!-- 查询评论id总数按商品ID分组-->
+    <select id="getCommentIdsCountByMerchantId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+      select count(DISTINCT product_id) FROM comment_product WHERE status =1 AND merchant_id = #{merchantId}
+    </select>
+
+    <select id="getProductCommentIdsByMerchantId" resultMap="BaseResultMap" parameterType="com.lawu.eshop.mall.param.CommentMerchantListParam">
+        SELECT DISTINCT
+	p.product_id
+    FROM
+        comment_product as p
+    WHERE
+        p.status = 1
+    AND p.merchant_id = #{merchantId} LIMIT #{offset},#{pageSize}
+    </select>
+
+</mapper>

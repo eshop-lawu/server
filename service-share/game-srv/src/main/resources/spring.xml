@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:reg="http://www.dangdang.com/schema/ddframe/reg" xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.dangdang.com/schema/ddframe/reg http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+       http://www.dangdang.com/schema/ddframe/job http://www.dangdang.com/schema/ddframe/job/job.xsd">
+    <!--配置作业注册中心 -->
+    <reg:zookeeper id="regCenter" server-lists="${zookeeper.servers}" namespace="game-job" />
+    <job:simple id="gameMatchCacheJob" description="更新游戏匹配缓存" class="com.lawu.eshop.game.srv.jobs.GameCacheUpdateJob"
+        registry-center-ref="regCenter" cron="0/3 * * * * ? " sharding-total-count="1" overwrite="true"
+        disabled="${dangdang.ddframe.job.disabled}" />
+    <job:simple id="gameAccountStarResetJob" description="每月星星清理"
+        class="com.lawu.eshop.game.srv.jobs.GameAccountStarResetJob" registry-center-ref="regCenter" cron="10 0 0 1 * ?"
+        sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+        
+    <job:simple id="gameAccountFreeCountResetJob" description="每日免费次数更新"
+        class="com.lawu.eshop.game.srv.jobs.GameAccountFreeCountResetJob" registry-center-ref="regCenter" cron="0 5 0 * * ?"
+        sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+
+    <job:simple id="gameRoomCloseJob" description="关闭无效的游戏房间"
+                class="com.lawu.eshop.game.srv.jobs.GameRoomCloseJob" registry-center-ref="regCenter" cron="0 0/5 * * * ?"
+                sharding-total-count="1" overwrite="true" disabled="${dangdang.ddframe.job.disabled}" />
+</beans>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.lawu.eshop.ad.srv.mapper.extend.InviterBountyDOMapperExtend">
+	
+	<resultMap type="com.lawu.eshop.ad.srv.domain.extend.InviterBountyDOView" id="BaseQuery">
+		<result column="total_money" jdbcType="DECIMAL" property="totalMoney"/>
+	</resultMap>
+	
+	<select id="queryInviterBountyTotalMoney"  resultMap="BaseQuery">
+		select sum(point) as total_money from take_inviter_bounty_detail 
+	</select>
+
+</mapper>

@@ -1,0 +1,1 @@
+INSERT INTO `eshop_mall`.`message_template`(`id`, `title`, `content`, `type`, `gmt_modified`, `gmt_create`) VALUES (52, '撤销退款', '亲爱的E店商家，买家“{0}”已撤销退款/退货申请，订单编号：“{1}”。点击查看订单详情', 52, '2017-12-18 18:29:38', '2017-12-18 18:29:40');

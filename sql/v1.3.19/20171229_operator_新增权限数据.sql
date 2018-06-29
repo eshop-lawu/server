@@ -1,0 +1,1 @@
+INSERT INTO `eshop_operator`.`permission` (`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES ('170', '助力红包报名管理', 'helpRedpacketAttend:list', 'helpRedpacket/helpRedpacketAttendDetail-list.html', '137', '999', '2017-12-29 10:20:12', '2017-12-29 10:20:15');

@@ -1,0 +1,1 @@
+alter table eshop_ad.ad add column `praise_type` tinyint(2) default 0 COMMENT 'E咻类型 1 拼图 2 点赞' after status;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.beh.analyze.srv.mapper.extend.InviteAbnormalDecideRecordDOMapperExtend" >
+
+    <select id="abnormalAccountCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT
+            is_short_hf + is_long_hf + is_many_short_hf + is_many_long_hf + is_one_day_hf + is_early_hf + is_ip_hf
+        FROM
+            invite_abnormal_decide_record
+        WHERE
+         id = #{id}
+   </select>
+</mapper>

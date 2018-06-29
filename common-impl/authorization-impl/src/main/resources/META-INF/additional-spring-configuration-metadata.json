@@ -1,0 +1,7 @@
+{"properties": [
+  {
+    "name": "com.lawu.authorization.token-manager.enabled",
+    "type": "java.lang.String",
+    "description": "是否启用token管理"
+  }
+]}

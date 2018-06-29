@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+             location="F:/1/maven/repository/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"/>
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 分页相关 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <!-- 带上序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- xml文件不追加的插件 -->
+        <plugin type="com.lawu.mybatis.plugin.OverIsMergeablePlugin" />
+        <!-- 忽略所有注释 -->
+        <commentGenerator type="com.lawu.mybatis.generator.EshopCommentGenerator">
+            <!--<property name="suppressAllComments" value="true"/>-->
+            <!-- 忽略日期注释 -->
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.22:3306/eshop_user?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root" password="1qazXSW@">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.lawu.eshop.user.srv.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="sqlmap" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lawu.eshop.user.srv.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--
+        <table tableName="member" domainObjectName="MemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant" domainObjectName="MerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_store_audit" domainObjectName="MerchantStoreAuditDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="favorite_merchant" domainObjectName="FavoriteMerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="member" domainObjectName="MemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant" domainObjectName="MerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_store_image" domainObjectName="MerchantStoreImageDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_store_profile" domainObjectName="MerchantStoreProfileDO">
+            <generatedKey column="id-1" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="fans_merchant" domainObjectName="FansMerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="property" domainObjectName="PropertyDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="member" domainObjectName="MemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_store_audit" domainObjectName="MerchantStoreAuditDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_store_audit" domainObjectName="MerchantStoreAuditDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="transaction_record" domainObjectName="TransactionRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="follow_transaction_record" domainObjectName="FollowTransactionRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="member" domainObjectName="MemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant" domainObjectName="MerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="user_login_log" domainObjectName="UserLoginLogDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="user_freeze_record" domainObjectName="UserFreezeRecordDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="fans_invite_content" domainObjectName="FansInviteContentDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="user_grade_detail" domainObjectName="UserGradeDetailDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="qq_login_member" domainObjectName="QqLoginMemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+         <table tableName="weixin_user" domainObjectName="WeixinUserDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+         <table tableName="wx_login_member" domainObjectName="WxLoginMemberDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="user_grade" domainObjectName="UserGradeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="member_profile" domainObjectName="MemberProfileDO">
+            <generatedKey column="id_1" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="merchant_profile" domainObjectName="MerchantProfileDO">
+            <generatedKey column="id_1" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="ali_user_info" domainObjectName="AliUserInfoDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="wx_login_merchant" domainObjectName="WxLoginMerchantDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+    </context>
+</generatorConfiguration>

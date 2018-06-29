@@ -1,0 +1,1 @@
+alter table `ad_platform`  modify column  `position` tinyint(2) NOT NULL COMMENT '广告位置(1-人气推荐2-要购物顶部广告 3-要购物今日推荐4-要购物精品5-看广告顶部广告 6-E店必够 7-特色好货 8-实惠单品  9-热门商品)';

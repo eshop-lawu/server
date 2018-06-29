@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.property.srv.mapper.extend.RechargeDOMapperExtend">
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.property.srv.domain.extend.ReportAreaRechargeDOExtend">
+        <result column="member_recharge_balance" property="memberRechargeBalance" jdbcType="DECIMAL"/>
+        <result column="member_recharge_point" property="memberRechargePoint" jdbcType="DECIMAL"/>
+        <result column="merchant_recharge_balance" property="merchantRechargeBalance" jdbcType="DECIMAL"/>
+        <result column="merchant_recharge_point" property="merchantRechargePoint" jdbcType="DECIMAL"/>
+        <result column="province_id" property="provinceId" jdbcType="INTEGER"/>
+        <result column="city_id" property="cityId" jdbcType="INTEGER"/>
+        <result column="area_id" property="areaId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="selectAgentAreaReportRechargeListByDate" resultMap="BaseResultMap"
+            parameterType="com.lawu.eshop.property.srv.domain.extend.ReportAreaRechargeDOView">
+    select tt.province_id,tt.city_id,tt.area_id,
+	case when sum(tt.memberRechargeBalance) is null then 0 else sum(tt.memberRechargeBalance) end member_recharge_balance,
+	case when sum(tt.memberRechargePoint) is null then 0 else sum(tt.memberRechargePoint) end member_recharge_point,
+	case when sum(tt.merchantRechargeBalance) is null then 0 else sum(tt.merchantRechargeBalance) end merchant_recharge_balance,
+	case when sum(tt.merchantRechargePoint) is null then 0 else sum(tt.merchantRechargePoint) end merchant_recharge_point
+  from (
+  select t.province_id,t.city_id,t.area_id ,
+  case
+      when (t.user_type = 1 and t.recharge_type = 1) then sum(t.total_money)
+  end  memberRechargeBalance,
+  case
+      when (t.user_type = 1 and t.recharge_type = 2) then sum(t.total_money)
+  end  memberRechargePoint,
+  case
+      when (t.user_type = 2 and t.recharge_type = 1) then sum(t.total_money)
+  end  merchantRechargeBalance,
+  case
+      when (t.user_type = 2 and t.recharge_type = 2) then sum(t.total_money)
+  end  merchantRechargePoint
+   from (
+    select province_id,city_id,area_id,user_type,recharge_type,sum(recharge_money) total_money from recharge
+      where status = ${status} and channel > ${channel} and gmt_modified BETWEEN #{beginDate} and #{endDate}
+      group by province_id,city_id,area_id, user_type,recharge_type
+  ) t group by t.province_id,t.city_id,t.area_id,t.user_type,t.recharge_type
+  ) tt group by tt.province_id,tt.city_id,tt.area_id
+  </select>
+
+	<select id="selectAreaRechargePoint"  resultType="com.lawu.eshop.property.srv.domain.extend.AreaRechargePointDOView" parameterType="com.lawu.eshop.property.param.ReportAgentAreaPointParam">
+		select sum(money) totalMoney,area_id as areaId,city_id as cityId,province_id as provinceId,left(user_num,1) as type 
+			from recharge
+			where recharge_type = 2 and status = 2 and area_id is not null and gmt_modified BETWEEN #{beginDate} and #{endDate}
+		group by area_id,city_id,province_id,left(user_num,1)
+		limit #{offset},#{pageSize}
+	</select>
+	
+	<resultMap id="RechargeReportResultMap" type="com.lawu.eshop.property.srv.domain.extend.RechargeDOView">
+        <result column="user_type" property="userType" jdbcType="TINYINT"/>
+        <result column="sum_recharge_money" property="sumRechargeMoney" jdbcType="DECIMAL"/>
+    </resultMap>
+	<!-- 余额查询统计 -->
+	<select id="selectWithdrawCashListByDateAndStatus"  resultMap="RechargeReportResultMap"  parameterType="com.lawu.eshop.property.srv.domain.extend.RechargeReportDOView">
+		SELECT
+			r.user_type as user_type,
+			sum(r.recharge_money) as sum_recharge_money
+		FROM
+			recharge r
+		WHERE
+			r.STATUS = ${status}
+		and r.recharge_type = ${rechargeType}
+		and r.gmt_modified BETWEEN #{bdate} and #{edate}
+		GROUP BY
+			r.user_type
+	</select>
+</mapper>

@@ -1,0 +1,1 @@
+alter table `eshop_product`.`product_category` add column  image_url varchar(200) COMMENT '图片路径' after level;

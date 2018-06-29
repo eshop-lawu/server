@@ -1,0 +1,2 @@
+alter table eshop_property.bank_account add column  `region_path` varchar(50) default null  COMMENT '省市区path' after bank_id;
+alter table eshop_property.bank_account add column  `region_name` varchar(100) default null  COMMENT '省市区名称' after region_path;

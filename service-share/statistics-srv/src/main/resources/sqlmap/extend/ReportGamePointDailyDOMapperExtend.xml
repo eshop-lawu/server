@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.statistics.srv.mapper.extend.ReportGamePointDailyDOMapperExtend">
+
+    <select id="getTotalGamePoint" resultType="com.lawu.eshop.statistics.srv.domain.extend.ReportGamePointDailyDOView"  parameterType="java.lang.Byte">
+       SELECT SUM(total_income_point) as totalIncomePoint, SUM(total_expend_point) as totalExpendPoint from report_game_point_daily where game_type =#{type}
+    </select>
+    
+    <resultMap id="BaseResultMap" type="com.lawu.eshop.statistics.srv.domain.extend.ReportTotalGamePointView" >
+	    <result column="stand_alone_expend_point" property="yAxisStandAloneExpendPointData" jdbcType="DECIMAL" />
+	    <result column="stand_alone_income_point" property="yAxisStandAloneIncomePointData" jdbcType="DECIMAL" />
+	    <result column="random_expend_point" property="yAxisRandomExpendPointData" jdbcType="DECIMAL" />
+	    <result column="random_income_point" property="yAxisRandomIncomePointData" jdbcType="DECIMAL" />
+	     <result column="many_people_expend_point" property="yAxisManyPeopleExpendPointData" jdbcType="DECIMAL" />
+	      <result column="many_people_income_point" property="yAxisManyPeopleIncomePointData" jdbcType="DECIMAL" />
+	  </resultMap>
+    
+    <select id="selectTotalReport" resultMap="BaseResultMap" parameterType="java.lang.Byte">
+         SELECT
+			IFNULL(sum(game.stand_alone_expend_point),0) AS stand_alone_expend_point,
+			IFNULL(sum(game.stand_alone_income_point),0) AS stand_alone_income_point,
+			IFNULL(sum(game.random_expend_point),0) AS random_expend_point,
+			IFNULL(sum(game.random_income_point),0) AS random_income_point,
+			IFNULL(sum(game.many_people_expend_point),0) AS many_people_expend_point,
+			IFNULL(sum(game.many_people_income_point),0) AS many_people_income_point
+		FROM
+			report_game_point_daily game
+		WHERE
+			game.game_type = #{type}
+    </select>
+
+</mapper>

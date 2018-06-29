@@ -1,0 +1,3 @@
+USE `eshop_operator`;
+INSERT INTO `eshop_operator`.`permission`(`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES (183, '异常账户管理', 'abnormal:list', 'abnormal/abnormal.html', 100, 999, '2017-12-29 16:19:29', '2017-12-29 16:19:34');
+INSERT INTO `eshop_operator`.`permission`(`id`, `permission_name`, `permission_key`, `permission_url`, `parent_id`, `sort_id`, `gmt_modified`, `gmt_create`) VALUES (184, '冻结异常账户', 'abnormal:freeze', NULL, 183, 999, '2018-01-19 09:45:09', '2018-01-19 09:45:12');

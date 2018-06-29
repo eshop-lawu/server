@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lawu.eshop.product.srv.mapper.extend.FavoriteProductDOMapperExtend" >
+  <resultMap id="BaseResultMap" type="com.lawu.eshop.product.srv.domain.extend.FavoriteProductView" >
+  	<result column="member_id" property="memberId" jdbcType="BIGINT" />
+    <result column="product_id" property="productId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="feature_image" property="featureImage" jdbcType="VARCHAR" />
+     <result column="min_price" property="price" jdbcType="DECIMAL" />
+     <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <select resultMap="BaseResultMap" parameterType="com.lawu.eshop.product.srv.domain.extend.FavoriteProductView" id="selectMyFavoriteProductByRowbounds" >
+    select 
+    	fp.member_id as member_id,
+    	fp.product_id as product_id,
+    	pd.name as name,
+    	pd.content as content,
+    	pd.min_price as min_price,
+    	pd.feature_image as feature_image
+    from favorite_product fp  
+    	left join product pd on fp.product_id=pd.id
+    where
+    	fp.member_id=#{memberId,jdbcType=BIGINT}
+    	ORDER BY  pd.status asc,fp.gmt_create desc
+  </select>
+</mapper>

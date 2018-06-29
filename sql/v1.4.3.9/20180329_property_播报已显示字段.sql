@@ -1,0 +1,2 @@
+alter table `eshop_property`.`income_daily_summary` add column is_show tinyint(1) DEFAULT '0' COMMENT '是否已播报' after income_type;
+alter table `eshop_property`.`income_daily_summary` add column gmt_modify datetime NULL COMMENT '修改时间' after gmt_create;

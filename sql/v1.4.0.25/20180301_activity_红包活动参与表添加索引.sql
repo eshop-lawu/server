@@ -1,0 +1,1 @@
+alter table eshop_activity.help_redpacket_attend_detail add UNIQUE KEY uk_activity_id_num(activity_id, user_num);

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+           location="F:/1/maven/repository/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"/>
+    <context id="MysqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 分页相关 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <!-- 带上序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- xml文件不追加的插件 -->
+        <plugin type="com.lawu.mybatis.plugin.OverIsMergeablePlugin" />
+        <!-- 忽略所有注释 -->
+        <commentGenerator type="com.lawu.mybatis.generator.EshopCommentGenerator">
+            <!--<property name="suppressAllComments" value="true"/>-->
+            <!-- 忽略日期注释 -->
+            <property name="suppressDate" value="true"/>
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.22:3306/eshop_product?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="root" password="1qazXSW@">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.lawu.eshop.product.srv.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="sqlmap" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lawu.eshop.product.srv.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        
+        <!--
+        <table tableName="favorite_product" domainObjectName="FavoriteProductDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_image" domainObjectName="ProductImageDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_model_inventory" domainObjectName="ProductModelInventoryDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_image" domainObjectName="ProductImageDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="recommend_product_category" domainObjectName="RecommendProductCategoryDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_category" domainObjectName="ProductCategoryeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="seckill_activity_attention" domainObjectName="SeckillActivityAttentionDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="seckill_activity_product" domainObjectName="SeckillActivityProductDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="seckill_activity_product_model" domainObjectName="SeckillActivityProductModelDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="seckill_activity" domainObjectName="SeckillActivityDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_brand" domainObjectName="ProductBrandDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_spec" domainObjectName="ProductSpecDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_custom_spec" domainObjectName="ProductCustomSpecDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_spec_option" domainObjectName="ProductSpecOptionDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_model" domainObjectName="ProductModelDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_brand" domainObjectName="ProductBrandDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product_category" domainObjectName="ProductCategoryeDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="seckill_activity_product" domainObjectName="SeckillActivityProductDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="product" domainObjectName="ProductDO">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+    </context>
+</generatorConfiguration>

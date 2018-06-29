@@ -1,0 +1,1 @@
+alter table withdraw_cash add column `region_full_name` varchar(200) NOT NULL DEFAULT '' COMMENT '用户区域全路径(冗余)' after `area_id`;

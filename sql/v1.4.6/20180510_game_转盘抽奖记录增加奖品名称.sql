@@ -1,0 +1,2 @@
+alter table	eshop_game.game_dial_record add column `prize_name` VARCHAR(50) NULL DEFAULT NULL COMMENT '奖品名称' after game_dial_prize_id;
+update eshop_game.game_dial_record as gdr set gdr.prize_name = (select gdp.name from eshop_game.game_dial_prize as gdp where gdp.id = gdr.game_dial_prize_id);

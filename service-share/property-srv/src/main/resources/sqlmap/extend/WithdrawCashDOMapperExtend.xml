@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.lawu.eshop.property.srv.mapper.extend.WithdrawCashDOMapperExtend">
+	<resultMap id="BaseResultMap"
+		type="com.lawu.eshop.property.srv.domain.extend.WithdrawCashDOView">
+		<result column="successNums" property="successNums" jdbcType="INTEGER" />
+		<result column="total" property="successMoney" jdbcType="DECIMAL" />
+	</resultMap>
+
+	<select resultMap="BaseResultMap"
+		parameterType="com.lawu.eshop.property.srv.domain.extend.WithdrawCashDOView"
+		id="getTotalNum">
+		select count(1) as successNums,sum(money) as total from
+		withdraw_cash where user_type = #{userType,jdbcType=TINYINT} and
+		status = #{status,jdbcType=TINYINT}
+	</select>
+
+	<resultMap id="withdrawCashTotalResultMap" type="com.lawu.eshop.property.srv.domain.extend.WithdrawCashTotalReportDOView">
+		<result column="cash_money" jdbcType="DECIMAL" property="cashMoney" />
+		<result column="user_type" jdbcType="INTEGER" property="userType"/>
+	</resultMap>
+
+	<update id="updateBatchWithdrawCashStatus" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open=""
+			close="" separator=";">
+			update withdraw_cash
+			set
+			status = #{item.status,jdbcType=TINYINT},
+			audit_faild_reason = #{item.auditFailReason,jdbcType=VARCHAR},
+			audit_user_id = #{item.auditUserId,jdbcType=BIGINT},
+			audit_user_name =
+			#{item.auditUserName,jdbcType=VARCHAR},
+			gmt_modified =
+			#{item.gmtModified,jdbcType=TIMESTAMP}
+			<if test="item.gmtAccept != null">
+				,gmt_accept = #{item.gmtAccept,jdbcType=TIMESTAMP}
+			</if>
+			<if test="item.gmtFinish != null">
+				,gmt_finish = #{item.gmtFinish,jdbcType=TIMESTAMP}
+			</if>
+			<if test="item.currentScale != null">
+				,current_scale = #{item.currentScale,jdbcType=VARCHAR}
+			</if>
+			<if test="item.money != null">
+				,money = #{item.money,jdbcType=DECIMAL}
+			</if>
+			where id =
+			#{item.id,jdbcType=BIGINT}
+		</foreach>
+	</update>
+
+	<select id="selectWithdrawCashTotalByDateAndStatus"  resultMap="withdrawCashTotalResultMap" parameterType="com.lawu.eshop.property.param.WithdrawCashReportTotalParam">
+		SELECT
+			user_type,sum(cash_money) cash_money
+		FROM
+			withdraw_cash
+		WHERE
+			`status` = ${status} and gmt_finish BETWEEN #{begin} and #{end}
+		GROUP BY
+			user_type
+	</select>
+
+	<select id="selectAgentWithdrawCashTotal"  resultMap="withdrawCashTotalResultMap" parameterType="com.lawu.eshop.property.param.AgentWithdrawCashReportTotalParam">
+		SELECT
+		user_type,sum(cash_money) cash_money
+		FROM
+		withdraw_cash
+		WHERE
+		`status` = ${status} and gmt_finish BETWEEN #{begin} and #{end} and city_id = ${cityId}
+		GROUP BY
+		user_type
+	</select>
+</mapper>

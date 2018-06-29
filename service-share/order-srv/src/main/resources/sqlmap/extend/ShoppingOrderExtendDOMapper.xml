@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.order.srv.mapper.extend.ShoppingOrderExtendDOMapper">
+	
+	<resultMap id="ShoppingOrderItemResultMap" type="com.lawu.eshop.order.srv.domain.ShoppingOrderItemDO">
+		<id column="item_id" jdbcType="BIGINT" property="id" />
+		<result column="shopping_order_id" jdbcType="BIGINT" property="shoppingOrderId" />
+		<result column="product_id" jdbcType="BIGINT" property="productId" />
+		<result column="product_name" jdbcType="VARCHAR" property="productName" />
+		<result column="product_model_id" jdbcType="BIGINT" property="productModelId" />
+        <result column="activity_product_model_id" jdbcType="BIGINT" property="activityProductModelId" />
+		<result column="product_model_name" jdbcType="VARCHAR" property="productModelName" />
+		<result column="product_feature_image" jdbcType="VARCHAR" property="productFeatureImage" />
+		<result column="regular_price" jdbcType="DECIMAL" property="regularPrice" />
+		<result column="sales_price" jdbcType="DECIMAL" property="salesPrice" />
+        <result column="item_deduction_points" jdbcType="DECIMAL" property="deductionPoints" />
+        <result column="item_deduction_points_amount" jdbcType="DECIMAL" property="deductionPointsAmount" />
+        <result column="subtotal" jdbcType="DECIMAL" property="subtotal" />
+		<result column="is_allow_refund" jdbcType="BIT" property="isAllowRefund" />
+		<result column="is_evaluation" jdbcType="BIT" property="isEvaluation" />
+		<result column="quantity" jdbcType="INTEGER" property="quantity" />
+        <result column="freight" jdbcType="VARCHAR" property="freight" />
+		<result column="item_order_status" jdbcType="TINYINT" property="orderStatus" />
+		<result column="refund_status" jdbcType="TINYINT" property="refundStatus" />
+		<result column="send_time" jdbcType="INTEGER" property="sendTime" />
+		<result column="item_gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="item_gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+	</resultMap>
+	
+	<resultMap id="ShoppingOrderExtendResultMap" type="com.lawu.eshop.order.srv.domain.extend.ShoppingOrderExtendDO">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="member_id" jdbcType="BIGINT" property="memberId" />
+		<result column="member_num" jdbcType="VARCHAR" property="memberNum" />
+		<result column="member_nickname" jdbcType="VARCHAR" property="memberNickname" />
+		<result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+		<result column="merchant_store_id" jdbcType="BIGINT" property="merchantStoreId" />
+		<result column="merchant_store_region_path" jdbcType="VARCHAR" property="merchantStoreRegionPath" />
+        <result column="activity_id" jdbcType="BIGINT" property="activityId" />
+        <result column="activity_product_id" jdbcType="BIGINT" property="activityProductId" />
+		<result column="merchant_num" jdbcType="VARCHAR" property="merchantNum" />
+		<result column="merchant_name" jdbcType="VARCHAR" property="merchantName" />
+		<result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+		<result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+		<result column="consignee_mobile" jdbcType="VARCHAR" property="consigneeMobile" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="message" jdbcType="VARCHAR" property="message" />
+		<result column="freight_price" jdbcType="DECIMAL" property="freightPrice" />
+		<result column="commodity_total_price" jdbcType="DECIMAL" property="commodityTotalPrice" />
+        <result column="deduction_points" jdbcType="DECIMAL" property="deductionPoints" />
+        <result column="deduction_points_amount" jdbcType="DECIMAL" property="deductionPointsAmount" />
+		<result column="order_total_price" jdbcType="DECIMAL" property="orderTotalPrice" />
+		<result column="actual_amount" jdbcType="DECIMAL" property="actualAmount" />
+    	<result column="commission_status" jdbcType="TINYINT" property="commissionStatus" />
+		<result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="send_time" jdbcType="INTEGER" property="sendTime" />
+		<result column="is_fans" jdbcType="BIT" property="isFans" />
+		<result column="is_no_reason_return" jdbcType="BIT" property="isNoReasonReturn" />
+		<result column="is_automatic_receipt" jdbcType="BIT" property="isAutomaticReceipt" />
+		<result column="is_done" jdbcType="BIT" property="isDone" />
+		<result column="shopping_cart_ids_str" jdbcType="VARCHAR" property="shoppingCartIdsStr" />
+		<result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+		<result column="payment_method" jdbcType="TINYINT" property="paymentMethod" />
+		<result column="third_number" jdbcType="VARCHAR" property="thirdNumber" />
+	    <result column="is_needs_logistics" jdbcType="BIT" property="isNeedsLogistics" />
+		<result column="waybill_num" jdbcType="VARCHAR" property="waybillNum" />
+		<result column="express_company_id" jdbcType="INTEGER" property="expressCompanyId" />
+		<result column="express_company_code" jdbcType="VARCHAR" property="expressCompanyCode" />
+		<result column="express_company_name" jdbcType="VARCHAR" property="expressCompanyName" />
+		<result column="gmt_commission" jdbcType="TIMESTAMP" property="gmtCommission" />
+		<result column="gmt_payment" jdbcType="TIMESTAMP" property="gmtPayment" />
+		<result column="gmt_transport" jdbcType="TIMESTAMP" property="gmtTransport" />
+		<result column="gmt_transaction" jdbcType="TIMESTAMP" property="gmtTransaction" />
+		<result column="gmt_done" jdbcType="TIMESTAMP" property="gmtDone" />
+		<result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+		<!-- 级联查询 -->
+		<collection property="items" column="item_id" javaType="list" ofType="com.lawu.eshop.order.srv.domain.ShoppingOrderItemDO" resultMap="ShoppingOrderItemResultMap"/>  
+	</resultMap>
+	
+	<resultMap id="ReportResultMap" type="com.lawu.eshop.order.srv.domain.extend.ReportRiseRateView">
+		<result column="keyTxt" property="keyTxt" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="ReportFansSaleTransFormResultMap" type="com.lawu.eshop.order.srv.domain.extend.ReportFansSaleTransFormDO">
+		<result column="is_fans" property="isFans" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="BIGINT" />
+	</resultMap>
+	
+	<resultMap id="NotShippedResultMap" type="com.lawu.eshop.order.srv.domain.extend.NotShippedDO">
+		<result column="merchant_num" property="merchantNum" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="BIGINT" />
+	</resultMap>
+	
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	
+	<sql id="ShoppingOrder_Column_List">
+		so.id, so.member_id, so.member_num, member_nickname,
+		so.merchant_id, so.merchant_store_id, so.merchant_store_region_path, so.activity_id, so.activity_product_id, so.merchant_num, so.merchant_name,
+		so.consignee_name, so.consignee_address, so.consignee_mobile, so.remark,
+		so.message, so.freight_price, so.commodity_total_price, so.deduction_points, so.deduction_points_amount,
+		so.order_total_price, so.actual_amount, so.commission_status,
+		so.order_status, so.status, so.send_time, so.is_fans,
+		so.is_no_reason_return, so.is_automatic_receipt, so.is_done, so.shopping_cart_ids_str,
+		so.order_num, so.payment_method, so.third_number, so.is_needs_logistics, so.waybill_num, so.express_company_id, so.express_company_code,
+		so.express_company_name, so.gmt_commission,
+		so.gmt_payment, so.gmt_transport,
+		so.gmt_transaction, so.gmt_done, so.gmt_create, so.gmt_modified
+	</sql>
+
+	<sql id="ShoppingOrderItem_Column_List">
+		soi.id as item_id, soi.shopping_order_id, soi.product_id,
+		soi.product_name, soi.product_model_id, soi.activity_product_model_id, soi.product_model_name,
+		soi.product_feature_image, soi.regular_price, soi.sales_price, soi.deduction_points as item_deduction_points, soi.deduction_points_amount as item_deduction_points_amount,
+		soi.subtotal, soi.quantity, soi.freight, soi.is_allow_refund, soi.is_evaluation, soi.order_status as item_order_status, soi.refund_status,
+		soi.gmt_create as item_gmt_create, soi.gmt_modified as item_gmt_modified
+	</sql>
+	
+	<select id="selectByExampleWithRowbounds" parameterType="com.lawu.eshop.order.srv.domain.extend.ShoppingOrderExtendDOExample" resultMap="ShoppingOrderExtendResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="ShoppingOrder_Column_List" />
+		<if test="isIncludeViewShoppingOrderItem">
+		,
+		<include refid="ShoppingOrderItem_Column_List" />
+		</if>
+		from shopping_order so
+		<if test="isIncludeShoppingOrderItem">
+			left join shopping_order_item soi on so.id = soi.shopping_order_id
+		</if>
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+
+	<select id="countByExample" parameterType="com.lawu.eshop.order.srv.domain.extend.ShoppingOrderExtendDOExample" resultType="java.lang.Long">
+		select count(<if test="distinct">distinct</if> so.id)
+		from shopping_order so
+		<if test="isIncludeShoppingOrderItem">
+			left join shopping_order_item soi on so.id = soi.shopping_order_id
+		</if>
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ShoppingOrderExtendResultMap">
+	  select 
+	  <include refid="ShoppingOrder_Column_List" />
+	  ,
+	  <include refid="ShoppingOrderItem_Column_List" />
+	  from shopping_order so
+	  left join shopping_order_item soi on so.id = soi.shopping_order_id
+	  where so.id = #{id,jdbcType=BIGINT}
+	</select>
+	
+	<select id="selectByExample" parameterType="com.lawu.eshop.order.srv.domain.extend.ShoppingOrderExtendDOExample" resultMap="ShoppingOrderExtendResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="ShoppingOrder_Column_List" />
+		<if test="isIncludeViewShoppingOrderItem">
+		,
+		<include refid="ShoppingOrderItem_Column_List" />
+		</if>
+		from shopping_order so
+		<if test="isIncludeShoppingOrderItem">
+			left join shopping_order_item soi on so.id = soi.shopping_order_id
+		</if>
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	
+	  <!-- Report -->
+	  <select id="selectByTransactionData" parameterType="com.lawu.eshop.order.param.ShoppingOrderReportDataParam" resultMap="ReportResultMap">
+	  	<if test="flag == 1">
+		  	SELECT DATE_FORMAT(so.gmt_done, "%d") AS keyTxt, sum(so.actual_amount) AS num
+			FROM shopping_order so
+			WHERE DATE_FORMAT(so.gmt_done, "%Y%m") = #{gmtDone,jdbcType=VARCHAR} and so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.is_done = 1
+			GROUP BY keyTxt
+		</if>
+		<if test="flag == 2">
+			SELECT DATE_FORMAT(so.gmt_done, "%m") AS keyTxt, sum(so.actual_amount) AS num
+			FROM shopping_order so
+			WHERE DATE_FORMAT(so.gmt_done, "%Y") = #{gmtDone,jdbcType=VARCHAR} and so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.is_done = 1
+			GROUP BY keyTxt
+		</if>
+	  </select>
+	  
+	  <select id="selectByTransactionTotalAmount" parameterType="com.lawu.eshop.order.param.ShoppingOrderReportDataParam" resultType="java.math.BigDecimal">
+	  	<if test="flag == 1">
+		  	SELECT sum(so.actual_amount) AS num
+			FROM shopping_order so
+			WHERE DATE_FORMAT(so.gmt_done, "%Y%m") = #{gmtDone,jdbcType=VARCHAR} and so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.is_done = 1
+	  	</if>
+	  	<if test="flag == 2">
+	  		SELECT sum(so.actual_amount) AS num
+			FROM shopping_order so
+			WHERE so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.is_done = 1
+	  	</if>
+	  </select>
+	  
+  	  <select id="selectByFansSaleTransForm" parameterType="com.lawu.eshop.order.param.ShoppingOrderReportDataParam" resultMap="ReportFansSaleTransFormResultMap">
+	  	  SELECT so.is_fans, COUNT(so.id) as count
+		  FROM shopping_order so
+		  WHERE so.merchant_id = #{merchantId,jdbcType=BIGINT} and so.is_done = 1
+		  GROUP BY so.is_fans
+	  </select>
+	  
+	  <!-- 根据商家编号分组查询待发货的数量 -->
+	  <select id="selectByNotShipped" parameterType="java.util.Date" resultMap="NotShippedResultMap">
+		SELECT count(DISTINCT(so.id)) as count, merchant_num  FROM shopping_order so LEFT JOIN shopping_order_item soi on so.id = soi.shopping_order_id
+		WHERE so.order_status = 2 AND soi.order_status = 2 AND so.gmt_payment &lt;= #{date,jdbcType=TIMESTAMP}
+		GROUP BY merchant_num
+	  </select>
+
+    <!-- 根据查询条件查询订单id，优化性能 -->
+    <select id="selectIdByExample" parameterType="com.lawu.eshop.order.srv.domain.extend.ShoppingOrderExtendDOExample" resultType="java.lang.Long">
+        select DISTINCT so.id, so.gmt_payment, so.gmt_create
+        from shopping_order so
+        <if test="isIncludeShoppingOrderItem">
+         left join shopping_order_item soi on so.id = soi.shopping_order_id
+        </if>
+        <if test="_parameter != null">
+         <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+         order by ${orderByClause}
+        </if>
+    </select>
+    
+    <!-- 更新商家实际收入金额 -->
+    <select id="updateMerchantActualIncome" parameterType="com.lawu.eshop.order.srv.domain.extend.UpdateMerchantActualIncomeParam">
+        UPDATE shopping_order SET actual_amount = actual_amount - #{refundAmount,jdbcType=DECIMAL},gmt_modified = now() WHERE id=#{id,jdbcType=BIGINT}
+    </select>
+</mapper>

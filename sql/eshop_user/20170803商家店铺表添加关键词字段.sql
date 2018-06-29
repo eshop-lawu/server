@@ -1,0 +1,1 @@
+alter table merchant_store add column `keywords` VARCHAR(100) NULL DEFAULT NULL COMMENT '关键词' after `industry_name`;

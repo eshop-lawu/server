@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lawu.eshop.ad.srv.mapper.extend.PointPoolDOMapperExtend">
+
+ <resultMap id="BaseResultMap" type="com.lawu.eshop.ad.srv.domain.PointPoolDO">
+ 	<id column="id" jdbcType="BIGINT" property="id" />
+    <result column="member_id" jdbcType="BIGINT" property="memberId" />
+    <result column="point" jdbcType="DECIMAL" property="point" />
+  </resultMap>
+
+  <select id="selectMember" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select id, member_id,point from point_pool WHERE ad_id=#{adId,jdbcType=BIGINT} and status=1 and type=1 ORDER BY point desc  LIMIT 3
+  </select>
+  
+  <select id="selectPoint" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select id, point from point_pool WHERE ad_id=#{adId,jdbcType=BIGINT} and status=0 and type=1  LIMIT 1
+  </select>
+  
+  
+  <resultMap id="BasePointResultMap" type="com.lawu.eshop.ad.srv.domain.extend.PointPoolDOView">
+    <result column="point" jdbcType="DECIMAL" property="point" />
+  </resultMap>
+  <select id="getTotlePoint" parameterType="java.lang.Long" resultMap="BasePointResultMap">
+   	  SELECT IFNULL(sum(point),0) as point FROM point_pool  where   ad_id=#{adId,jdbcType=BIGINT} and status=1
+  </select>
+  
+  <update id="updatePointOut" parameterType="java.lang.Long" >
+   	  update  point_pool set status=2 where ad_id=#{adId,jdbcType=BIGINT} and status=0
+  </update>
+ 
+</mapper>

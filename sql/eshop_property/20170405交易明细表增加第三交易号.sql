@@ -1,0 +1,1 @@
+alter table transaction_detail add column `third_transaction_num` varchar(30) COMMENT '第三方支付交易号' after `amount`;

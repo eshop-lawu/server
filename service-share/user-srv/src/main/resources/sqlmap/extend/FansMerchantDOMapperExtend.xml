@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.lawu.eshop.user.srv.mapper.extend.FansMerchantDOMapperExtend">
+	<resultMap id="BaseResultMap"
+		type="com.lawu.eshop.user.srv.domain.extend.FansMerchantDOView">
+		<result column="memberId" property="memberId" jdbcType="BIGINT" />
+		<result column="num" property="num" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="region_path" property="regionPath" jdbcType="VARCHAR" />
+		<result column="region_name" property="regionName" jdbcType="VARCHAR" />
+		<result column="nickname" property="nickname" jdbcType="VARCHAR" />
+		<result column="headimg" property="headimg" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="ReportBaseResultMap"
+		type="com.lawu.eshop.user.srv.domain.extend.FansMerchantDOReportView">
+		<result column="keyTxt" property="keyTxt" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select resultMap="BaseResultMap"
+		parameterType="com.lawu.eshop.user.param.ListInviteFansRealParam" id="listInviteFans">
+		select id as
+		memberId,num,account,region_path,region_name,nickname,headimg,level
+		from member where id not in(select member_id from fans_merchant where merchant_id = #{merchantId,jdbcType=BIGINT})
+		<if test="regionPath != null and regionPath != ''">
+			and region_path like CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="sex != 1">
+			and sex = #{sex,jdbcType=TINYINT}
+		</if>
+		<if test="ageLimit == true">
+			and TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &gt;=
+			#{startAge,jdbcType=INTEGER} and
+			TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &lt;=
+			#{endAge,jdbcType=INTEGER}
+		</if>
+		<if test="inviteCount != null">
+			limit #{inviteCount,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select resultMap="BaseResultMap"
+		parameterType="com.lawu.eshop.user.param.ListInviteFansRealWithContentParam" id="listInviteFansWithContent">
+		select id as
+		memberId,num,account,region_path,region_name,nickname,headimg,level
+		from member where id not in(select member_id from fans_merchant where merchant_id = #{merchantId,jdbcType=BIGINT})
+		<if test="regionPath != null and regionPath != ''">
+			and region_path like CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="sex != 1">
+			and sex = #{sex,jdbcType=TINYINT}
+		</if>
+		<if test="ageLimit == true">
+			and TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &gt;=
+			#{startAge,jdbcType=INTEGER} and
+			TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &lt;=
+			#{endAge,jdbcType=INTEGER}
+		</if>
+		<if test="inviteType == 2">
+			and num not in
+			<foreach item="num" index="index" collection="nums" open="(" separator="," close=")">  
+ 				#{num,jdbcType=VARCHAR}  
+			</foreach>  
+		</if>
+		<if test="inviteType == 3">
+			and num in
+			<foreach item="num" index="index" collection="nums" open="(" separator="," close=")">  
+ 				#{num,jdbcType=VARCHAR}  
+			</foreach>  
+		</if>
+		<if test="inviteCount != null">
+			limit #{inviteCount,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+
+	<select resultMap="BaseResultMap"
+			parameterType="com.lawu.eshop.user.param.ListInviteFansRealParam" id="pageListInviteFans">
+		select 	memberId,num,account,region_path,region_name,nickname,headimg,level,gmt_create from
+		(
+			select id as
+			memberId,num,account,region_path,region_name,nickname,headimg,level,gmt_create
+			from member where id not in(select member_id from fans_merchant where merchant_id = #{merchantId,jdbcType=BIGINT})
+			<if test="regionPath != null and regionPath != ''">
+				and region_path like CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="sex != 1">
+				and sex = #{sex,jdbcType=TINYINT}
+			</if>
+			<if test="ageLimit == true">
+				and TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &gt;=
+				#{startAge,jdbcType=INTEGER} and
+				TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &lt;=
+				#{endAge,jdbcType=INTEGER}
+			</if>
+			<if test="inviteCount != null">
+				limit #{inviteCount,jdbcType=INTEGER}
+			</if>
+		) t
+		limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+	</select>
+
+	<select resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.ListInviteFansRealParam"
+			id="countInviteFans">
+		select count(1)
+		from member where id not in(select member_id from fans_merchant where merchant_id = #{merchantId,jdbcType=BIGINT})
+		<if test="regionPath != null and regionPath != ''">
+			and region_path like CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="sex != 1">
+			and sex = #{sex,jdbcType=TINYINT}
+		</if>
+		<if test="ageLimit == true">
+			and TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &gt;=
+			#{startAge,jdbcType=INTEGER} and
+			TIMESTAMPDIFF(YEAR,birthday,CURRENT_DATE) &lt;=
+			#{endAge,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select resultMap="BaseResultMap" parameterType="com.lawu.eshop.user.param.ListFansRealParam"
+		id="listFans">
+		select
+		mem.account,mem.region_path,mem.region_name,mem.nickname,mem.headimg,mem.level,fm.gmt_create
+		from fans_merchant fm inner join member mem on fm.member_id = mem.id
+		where fm.merchant_id = #{merchantId,jdbcType=BIGINT} and fm.`status` = 1 
+		<if test="regionPath != null and regionPath != ''">
+			and mem.region_path like
+			CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+		</if>
+		order by fm.id desc
+		limit
+		#{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+	</select>
+
+	<select resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.param.ListFansRealParam"
+		id="countFans">
+		select count(1)
+		from fans_merchant fm inner join member mem on
+		fm.member_id = mem.id
+		where fm.merchant_id =
+		#{merchantId,jdbcType=BIGINT} and fm.`status` = 1 
+		<if test="regionPath != null and regionPath != ''">
+			and mem.region_path like
+			CONCAT(#{regionPath,jdbcType=VARCHAR},'%')
+		</if>
+	</select>
+
+	<select id="fansRiseRate" resultMap="ReportBaseResultMap"
+		parameterType="java.lang.String">
+		<if test="flag == 1">
+			SELECT
+			DATE_FORMAT(gmt_create, "%d") as keyTxt,
+			count(1) as
+			num
+			FROM
+			fans_merchant
+			WHERE
+			DATE_FORMAT(gmt_create, "%Y%m") =
+			#{formatDate} and merchant_id = #{merchantId} and status = 1
+			GROUP BY
+			DATE_FORMAT(gmt_create, "%d")
+		</if>
+		<if test="flag == 2">
+			SELECT
+			DATE_FORMAT(gmt_create, "%m") as keyTxt,
+			count(1) as
+			num
+			FROM
+			fans_merchant
+			WHERE
+			DATE_FORMAT(gmt_create, "%Y") =
+			#{formatDate} and merchant_id = #{merchantId} and status = 1
+			GROUP BY
+			DATE_FORMAT(gmt_create, "%m")
+		</if>
+	</select>
+
+	<select id="fansRiseSource" resultMap="ReportBaseResultMap"
+		parameterType="java.lang.Long">
+			SELECT
+			channel as keyTxt,
+			count(1) AS num
+			FROM
+			fans_merchant
+			WHERE
+			merchant_id = #{merchantId}  and status = 1
+			GROUP BY
+			channel
+	</select>
+
+	<select id="countOverdueFans" parameterType="com.lawu.eshop.user.param.UserFansParam" resultType="java.lang.Integer">
+		SELECT count(1) FROM fans_merchant WHERE merchant_id = #{merchantId} and status = 0 and channel = 2 and gmt_create &lt;= SUBDATE(#{gmtCreate},interval 24 hour);
+	</select>
+
+	<select id="delOverdueFans" parameterType="com.lawu.eshop.user.param.UserFansParam">
+		DELETE FROM fans_merchant WHERE merchant_id = #{merchantId} and status = 0 and channel = 2 and gmt_create &lt;= SUBDATE(#{gmtCreate},interval 24 hour);
+	</select>
+	
+	<insert id="batchInsertFansMerchant" parameterType="java.util.List">
+		insert into fans_merchant(merchant_id, member_id, status, channel, gmt_create)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.merchantId},#{item.memberId},#{item.status},#{item.channel},#{item.gmtCreate})
+		</foreach>
+	</insert>
+	
+	
+	<select id="findMerchantFensCount" resultType="java.lang.Integer" parameterType="com.lawu.eshop.user.srv.domain.extend.FensCountView">
+		SELECT
+			count(*)
+		FROM
+			fans_merchant fm
+		LEFT JOIN member m ON fm.member_id = m.id
+		WHERE
+			fm.merchant_id = #{merchantId} and fm.`status` =1 and m.`status` =1
+		<if test="sex != null and sex !=1">
+			and m.sex = #{sex}
+		</if>
+		<if test="minAge != null and maxAge !=null">
+			and TIMESTAMPDIFF(YEAR, m.birthday, CURDATE()) BETWEEN #{minAge} and #{maxAge} 
+		</if>
+	</select>
+</mapper>
