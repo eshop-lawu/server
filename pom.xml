@@ -34,7 +34,7 @@
         <springfox.swagger>2.8.0</springfox.swagger>
         <elastic.job.version>2.1.4</elastic.job.version>
         <curator.version>2.11.1</curator.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <sprint.test.version>4.3.6.RELEASE</sprint.test.version>
         <druid-spring-boot-starter.version>1.1.10</druid-spring-boot-starter.version>
         <concurrent-queue.version>1.8-SNAPSHOT</concurrent-queue.version>
